@@ -31,7 +31,7 @@ public class Server {
 		return outputStreams.elements();
 	}
 
-	void sendToAll( Packet packet ) {
+	void forwardToReceiver( Packet packet ) {
 		//		synchronized( outputStreams ) {
 		//			for (Enumeration e = getOutputStreams(); e.hasMoreElements(); ) {
 		//				ObjectOutputStream dout = (ObjectOutputStream)e.nextElement();

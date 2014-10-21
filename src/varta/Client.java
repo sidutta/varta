@@ -16,7 +16,7 @@ public class Client extends Panel implements Runnable {
 
 	public Client( String host, int port ) {
 		
-		final String username = "siddutta1";
+		final String username = "shivam";
 
 		GridLayout experimentLayout = new GridLayout(0,2);
 		experimentLayout.setVgap(2);

@@ -3,20 +3,14 @@ import java.io.*;
 import java.net.*;
 public class ServerThread extends Thread
 {
-	// The Server that spawned us
 	private Server server;
-	// The Socket connected to our client
 	private Socket socket;
 	public String username;
 	public ServerThread( Server server, Socket socket ) {
-		// Save the parameters
 		this.server = server;
 		this.socket = socket;
-		//Start up the thread
 		start();
 	}
-	//This runs in a separate thread when start() is called in the
-	//constructor.
 	public void run() {
 		ObjectInputStream din = null;
 		try {
@@ -30,7 +24,7 @@ public class ServerThread extends Thread
 				packet = (Packet) din.readObject();
 				packet.setSender(username);
 				System.out.println( "Sending " + packet );
-				server.sendToAll( packet );
+				server.forwardToReceiver( packet );
 			}
 		} catch( EOFException ie ) {
 		} catch( IOException ie ) {
