@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="varta.view.ChatController">
+   <children>
+      <AnchorPane layoutX="2.0" prefHeight="500.0" prefWidth="500.0">
+         <children>
+            <TextField fx:id="receiverId" layoutX="225.0" layoutY="14.0" prefHeight="30.0" prefWidth="275.0" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0" />
+            <Label layoutX="194.0" layoutY="7.0" text="To:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="sendMsg" layoutX="194.0" layoutY="371.0" prefHeight="129.0" prefWidth="200.0" />
+            <Button fx:id="sendButton" layoutX="393.0" layoutY="370.0" mnemonicParsing="false" prefHeight="129.0" prefWidth="109.0" text="SEND">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <TextArea fx:id="chatBox" layoutX="195.0" layoutY="38.0" prefHeight="329.0" prefWidth="303.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

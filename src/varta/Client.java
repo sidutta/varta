@@ -4,21 +4,25 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import varta.view.ChatController;
+
 public class Client extends Panel implements Runnable {
 	
 	//private TextField sendertf = new TextField();
-	private TextField receivertf = new TextField();
+	/*private TextField receivertf = new TextField();
 	private TextField messagetf = new TextField();
-	private TextArea displayta = new TextArea();
+	private TextArea displayta = new TextArea();*/
 	private Socket socket;
 	private ObjectOutputStream dout;
 	private ObjectInputStream din;
+	private final String username;
+	private ChatController chatController;
 
-	public Client( String host, int port ) {
+	public Client( String host, String user,int port ) {
 		
-		final String username = "shivam";
+		username=user;
 
-		GridLayout experimentLayout = new GridLayout(0,2);
+		/*GridLayout experimentLayout = new GridLayout(0,2);
 		experimentLayout.setVgap(2);
 		setLayout( experimentLayout );
 		add(new Label("Display Name: " + username));
@@ -44,7 +48,7 @@ public class Client extends Panel implements Runnable {
 				}
 			}
 		} );
-
+*/
 		try {
 			socket = new Socket( host, port );
 			System.out.println( "connected to "+socket );
@@ -56,12 +60,12 @@ public class Client extends Panel implements Runnable {
 		} catch( IOException ie ) { System.out.println( ie ); }
 	}
 
-	private void processMessage( String sender, String receiver, String message ) {
+	public void processMessage( String sender, String receiver, String message ) {
 		try {
 			dout.writeObject( new Packet(1, sender, receiver, message) );
 			dout.flush();
-			displayta.append("Me: " + message + "\n");
-			messagetf.setText( "" );
+			//displayta.append("Me: " + message + "\n");
+			//messagetf.setText( "" );
 		} catch( IOException ie ) { System.out.println( ie ); }
 	}
 
@@ -71,17 +75,28 @@ public class Client extends Panel implements Runnable {
 				Packet packet = null;
 				try {
 					packet = (Packet) din.readObject();
+					System.out.println(username+" got a message.");
+					chatController.printMessage(packet.getSender(),packet.getMessage());
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				displayta.append( packet.getSender() + ": " + packet.getMessage() +"\n" );
+				//displayta.append( packet.getSender() + ": " + packet.getMessage() +"\n" );
 			}
 		
 	}
-	
-	public static void main(String[] args) {
-		new Client("localhost", 5000);
+	public String getUsername()
+	{
+		return username;
 	}
+	
+	public void setController(ChatController controller)
+	{
+		chatController=controller;
+	}
+	
+	/*public static void main(String[] args) {
+		//new Client("localhost", 5000);
+	}*/
 }
