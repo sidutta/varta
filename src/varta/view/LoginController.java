@@ -40,12 +40,12 @@ public class LoginController {
 	        	
 	        	Stage loginStage = (Stage) loginButton.getScene().getWindow();	        	
 	        	Stage chatStage=new Stage();
-	        	chatStage.setTitle("Varta. Welcome "+client.getUsername()+".");
+	        	chatStage.setTitle( "Varta. Welcome " + client.getUsername() + "." );
 	            FXMLLoader loader = new FXMLLoader();
-	            loader.setLocation(getClass().getResource("ChatWindow.fxml"));
+	            loader.setLocation( getClass().getResource("ChatWindow.fxml") );
 	            AnchorPane chatpage = (AnchorPane) loader.load();
-	            Scene scene = new Scene(chatpage);
-	            chatStage.setScene(scene);
+	            Scene scene = new Scene( chatpage );
+	            chatStage.setScene( scene );
 	            loginStage.close();
 	            chatStage.show();
 	            
