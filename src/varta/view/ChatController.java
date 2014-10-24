@@ -57,6 +57,7 @@ public class ChatController {
     		{
     			LoginController.client.processMessage(LoginController.client.getUsername(),recId,msgText);
     			chatBox.appendText("Me: "+msgText+"\n");
+    			sendMsg.setText("");
     		}
 		});
     	
