@@ -1,3 +1,4 @@
+
 package varta.view;
 
 import varta.Client;
@@ -18,62 +19,61 @@ import varta.Client;
 
 
 public class ChatController {
-
-
+	
+	
 
 	@FXML
 	private Button sendButton;
-
+	
 	@FXML
 	private TextField receiverId;
-
+	
 	@FXML
 	private TextArea sendMsg;
-
+	
 	@FXML
 	private TextArea chatBox;
+	
 
+     public ChatController() {
+    }
 
-	public ChatController() {
-	}
-
-
-	@FXML
-	private void initialize() {
-
-		System.out.println("Entered initialize");
-		System.out.println(LoginController.client.getUsername());
-		LoginController.client.setController(this);
-
-		chatBox.setEditable(false);
-
-		sendButton.setOnAction((event) -> {
-
-			System.out.println("Button Pressed");
-			String recId=receiverId.getText();
-			String msgText=sendMsg.getText();
-			System.out.println(recId);
-			System.out.println(msgText);
-			if(!recId.equals("") && !msgText.equals(""))
-			{
-				LoginController.client.processMessage(LoginController.client.getUsername(),recId,msgText);
-				chatBox.appendText("Me: "+msgText+"\n");
-			}
+    
+    @FXML
+    private void initialize() {
+    	
+    	System.out.println("Entered initialize");
+    	System.out.println(LoginController.client.getUsername());
+    	LoginController.client.setController(this);
+    	chatBox.setEditable(false);
+    	sendButton.setOnAction((event) -> {
+    		
+    		System.out.println("Button Pressed");
+    		String recId=receiverId.getText();
+    		String msgText=sendMsg.getText();
+    		System.out.println(recId);
+    		System.out.println(msgText);
+    		if(!recId.equals("") && !msgText.equals(""))
+    		{
+    			LoginController.client.processMessage(LoginController.client.getUsername(),recId,msgText);
+    			chatBox.appendText("Me: "+msgText+"\n");
+    		}
 		});
+    	
+   }
+    
+    public void printMessage(String sender, String message)
+    {
+    	Platform.runLater(new Runnable() {
+    	    @Override
+    	    public void run() {
+    	    	chatBox.appendText(sender+": "+message+"\n");    	      
+    	    }
+    	});
+    	
+    }
 
-	}
+    
+    
+    }
 
-	public void printMessage(String sender, String message)
-	{
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				chatBox.appendText(sender+": "+message+"\n");    	      
-			}
-		});
-
-	}
-
-
-
-}
