@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="varta.view.ChatController">
+   <children>
+      <AnchorPane layoutX="2.0" layoutY="-1.0" prefHeight="500.0" prefWidth="500.0">
+         <children>
+            <TextField fx:id="receiverId" layoutX="195.0" layoutY="11.0" prefHeight="30.0" prefWidth="303.0" AnchorPane.leftAnchor="195.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="11.0" />
+            <Label layoutX="149.0" layoutY="15.0" text="To:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="sendMsg" layoutX="194.0" layoutY="371.0" prefHeight="123.0" prefWidth="200.0" />
+            <Button fx:id="sendButton" layoutX="398.0" layoutY="372.0" mnemonicParsing="false" prefHeight="123.0" prefWidth="100.0" text="SEND">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <TextArea fx:id="chatBox" layoutX="195.0" layoutY="49.0" prefHeight="318.0" prefWidth="303.0" />
+            <ToolBar layoutX="195.0" layoutY="374.0" prefHeight="23.0" prefWidth="301.0">
+               <items>
+                  <ImageView fx:id="happy" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../img/happy.jpeg" />
+                     </image>
+                  </ImageView>
+               </items>
+            </ToolBar>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
