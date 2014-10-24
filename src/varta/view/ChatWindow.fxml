@@ -26,7 +26,7 @@
             <TextArea fx:id="chatBox" layoutX="195.0" layoutY="49.0" prefHeight="318.0" prefWidth="303.0" />
             <ToolBar layoutX="195.0" layoutY="374.0" prefHeight="23.0" prefWidth="301.0">
                <items>
-                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="happy" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../img/happy.jpeg" />
                      </image>
