@@ -1,4 +1,0 @@
-varta
-=====
-
-snapchat-like application

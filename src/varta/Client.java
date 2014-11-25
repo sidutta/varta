@@ -18,7 +18,7 @@ public class Client extends Panel implements Runnable {
 	private final String username;
 	private ChatController chatController;
 
-	public Client( String host, String user,int port ) {
+	public Client( String host, String user, String password,int port ) {
 		
 		username=user;
 
@@ -54,7 +54,7 @@ public class Client extends Panel implements Runnable {
 			System.out.println( "connected to "+socket );
 			din = new ObjectInputStream( socket.getInputStream() );
 			dout = new ObjectOutputStream( socket.getOutputStream() );
-			dout.writeObject( new Packet(0, username, null, null) );
+			//dout.writeObject( new Packet(0, username, null, password) );
 			dout.flush();
 			new Thread( this ).start();
 		} catch( IOException ie ) { System.out.println( ie ); }
@@ -63,6 +63,15 @@ public class Client extends Panel implements Runnable {
 	public void processMessage( String sender, String receiver, String message ) {
 		try {
 			dout.writeObject( new Packet(1, sender, receiver, message) );
+			dout.flush();
+			//displayta.append("Me: " + message + "\n");
+			//messagetf.setText( "" );
+		} catch( IOException ie ) { System.out.println( ie ); }
+	}
+	
+	public void connMessage( String sender, String receiver, String message ) {
+		try {
+			dout.writeObject( new Packet(0, sender, receiver, message) );
 			dout.flush();
 			//displayta.append("Me: " + message + "\n");
 			//messagetf.setText( "" );

@@ -20,7 +20,15 @@ public class LoginController {
 	@FXML
 	private TextField userid;
 	
+	@FXML
+	private TextField password;
+	
+	@FXML
+	private Button signup;
+	
 	public static Client client;
+	
+
 	
 
      public LoginController() {
@@ -32,12 +40,14 @@ public class LoginController {
     	
     	loginButton.setOnAction((event) -> {
     		String username=userid.getText();
+    		String passwd=password.getText();
 			System.out.println(username);
-			client=new Client("localhost",username,5002);
+			System.out.println(passwd);
+			client=new Client("localhost",username,null,5002);
 			
 			
 	        try {
-	        	
+	        	LoginController.client.connMessage(LoginController.client.getUsername(),null,passwd);
 	        	Stage loginStage = (Stage) loginButton.getScene().getWindow();	        	
 	        	Stage chatStage=new Stage();
 	        	chatStage.setTitle("Varta. Welcome "+client.getUsername()+".");
@@ -54,6 +64,27 @@ public class LoginController {
 	            e.printStackTrace();
 	        }
 		});
+    	
+    	signup.setOnAction((event)->{
+    		try{
+    			
+
+	        	Stage loginStage = (Stage) loginButton.getScene().getWindow();	    
+	        	Stage signupStage = new Stage();
+	        	signupStage.setTitle("SignUp for MASS CHAT");
+	            FXMLLoader loader = new FXMLLoader();
+	            loader.setLocation(getClass().getResource("Signup.fxml"));
+	            AnchorPane signupPage = (AnchorPane) loader.load();
+	            Scene scene = new Scene(signupPage);
+	            signupStage.setScene(scene);
+	            loginStage.close();
+	            signupStage.show();
+
+    		}
+    		catch (IOException e) {
+	            e.printStackTrace();
+	        }
+    	});
     }
     
     

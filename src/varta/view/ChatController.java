@@ -45,6 +45,8 @@ public class ChatController {
     	System.out.println(LoginController.client.getUsername());
     	LoginController.client.setController(this);
     	
+
+    	
     	sendButton.setOnAction((event) -> {
     		
     		System.out.println("Button Pressed");

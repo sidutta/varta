@@ -64,7 +64,7 @@ public class Server {
 
 	static public void main( String args[] ) throws Exception {
 		// int port = Integer.parseInt( args[0] );
-		int port = 5002;
+		int port = 5003;
 		new Server( port );
 	}
 
