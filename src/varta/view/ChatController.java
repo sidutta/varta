@@ -44,7 +44,11 @@ public class ChatController {
 	@FXML
 	private TextArea chatBox;
 
-
+	@FXML
+	private AnchorPane friends;
+	
+	private Integer offset =0;
+	
 	public ChatController() {
 	}
 
@@ -72,9 +76,9 @@ public class ChatController {
 			}
 		});
 		
-		happy.setOnMouseClicked((event) -> {
-			sendMsg.appendText(":)");
-		});
+//		happy.setOnMouseClicked((event) -> {
+//			sendMsg.appendText(":)");
+//		});
 		
 	}
 
@@ -87,6 +91,24 @@ public class ChatController {
 			}
 		});
 
+	}
+	
+	@FXML
+	public void openNewTab(String sender){
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				Button tp = new Button(sender);
+				tp.setLayoutY(10+offset);
+				tp.setMinWidth(125);
+				tp.setMaxWidth(125);
+				offset+=35;
+				friends.getChildren().add(tp);
+				System.out.println("dsf");
+				}
+		});
+		
 	}
 
 

@@ -11,24 +11,18 @@
    <children>
       <AnchorPane layoutY="7.0" prefHeight="256.0" prefWidth="431.0" AnchorPane.leftAnchor="0.0">
          <children>
-<<<<<<< HEAD
-            <TextField fx:id="userid" layoutX="151.0" layoutY="101.0" />
+            <TextField fx:id="password" layoutX="151.0" layoutY="101.0" />
             <Label layoutX="70.0" layoutY="65.0" text="User Name" />
             <Button fx:id="loginButton" layoutX="219.0" layoutY="141.0" mnemonicParsing="false" text="Go!" />
-            <TextField fx:id="password" layoutX="151.0" layoutY="60.0" />
+            <TextField fx:id="userid" layoutX="151.0" layoutY="60.0" />
             <Label layoutX="74.0" layoutY="101.0" text="Password" />
             <Button fx:id="signup" layoutX="205.0" layoutY="208.0" mnemonicParsing="false" text="Sign up!" />
             <Label layoutX="138.0" layoutY="178.0" text="Not Signed up yet ? Sign up Now!" />
-            <Label layoutX="151.0" layoutY="14.0" text="MASS CHAT">
+            <Label layoutX="149.0" text="MASS CHAT">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-=======
-            <TextField fx:id="userid" layoutX="151.0" layoutY="80.0" />
-            <Label layoutX="70.0" layoutY="85.0" text="User Name" />
-            <Button fx:id="loginButton" layoutX="218.0" layoutY="119.0" mnemonicParsing="false" text="Enter" />
->>>>>>> 357310a661615812b661f22f5daa792692ead981
          </children>
       </AnchorPane>
    </children>

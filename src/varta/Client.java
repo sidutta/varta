@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import java.util.*;
+
 import varta.view.ChatController;
 
 public class Client extends Panel implements Runnable {
@@ -17,7 +19,7 @@ public class Client extends Panel implements Runnable {
 	private ObjectInputStream din;
 	private final String username;
 	private ChatController chatController;
-
+	private Set<String>  talkingTo =new HashSet<String>();
 
 	public Client( String host, String user,int port ) {
 		
@@ -88,6 +90,11 @@ public class Client extends Panel implements Runnable {
 				try {
 					packet = (Packet) din.readObject();
 					System.out.println(username+" got a message.");
+					if(!talkingTo.contains(packet.getSender())){
+						System.out.println("New Sender");
+						talkingTo.add(packet.getSender());
+						chatController.openNewTab(packet.getSender());
+					}
 					chatController.printMessage(packet.getSender(),packet.getMessage());
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
