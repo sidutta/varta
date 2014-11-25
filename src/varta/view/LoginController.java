@@ -2,11 +2,16 @@ package varta.view;
 
 import java.io.IOException;
 
+
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import varta.Client;
@@ -16,6 +21,7 @@ public class LoginController {
 
 	@FXML
 	private Button loginButton;
+ 
 	
 	@FXML
 	private TextField userid;
@@ -43,7 +49,7 @@ public class LoginController {
     		String passwd=password.getText();
 			System.out.println(username);
 			System.out.println(passwd);
-			client=new Client("localhost",username,null,5002);
+			client=new Client("localhost",username,5002);
 			
 			
 	        try {

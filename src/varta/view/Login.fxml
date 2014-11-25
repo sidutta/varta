@@ -11,6 +11,7 @@
    <children>
       <AnchorPane layoutY="7.0" prefHeight="256.0" prefWidth="431.0" AnchorPane.leftAnchor="0.0">
          <children>
+<<<<<<< HEAD
             <TextField fx:id="userid" layoutX="151.0" layoutY="101.0" />
             <Label layoutX="70.0" layoutY="65.0" text="User Name" />
             <Button fx:id="loginButton" layoutX="219.0" layoutY="141.0" mnemonicParsing="false" text="Go!" />
@@ -23,6 +24,11 @@
                   <Font size="24.0" />
                </font>
             </Label>
+=======
+            <TextField fx:id="userid" layoutX="151.0" layoutY="80.0" />
+            <Label layoutX="70.0" layoutY="85.0" text="User Name" />
+            <Button fx:id="loginButton" layoutX="218.0" layoutY="119.0" mnemonicParsing="false" text="Enter" />
+>>>>>>> 357310a661615812b661f22f5daa792692ead981
          </children>
       </AnchorPane>
    </children>

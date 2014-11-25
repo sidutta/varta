@@ -64,7 +64,11 @@ public class Server {
 
 	static public void main( String args[] ) throws Exception {
 		// int port = Integer.parseInt( args[0] );
+<<<<<<< HEAD
 		int port = 5003;
+=======
+		int port = 5002;
+>>>>>>> 357310a661615812b661f22f5daa792692ead981
 		new Server( port );
 	}
 
