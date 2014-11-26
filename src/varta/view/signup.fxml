@@ -6,7 +6,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="varta.view.SignupController">
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
@@ -15,8 +14,8 @@
             <Button fx:id="signup_button" layoutX="261.0" layoutY="290.0" mnemonicParsing="false" text="Sign Up" />
             <PasswordField fx:id="confirmpasswd" layoutX="222.0" layoutY="218.0" />
             <PasswordField fx:id="passwd" layoutX="222.0" layoutY="174.0" />
-            <RadioButton layoutX="222.0" layoutY="137.0" mnemonicParsing="false"   text="Male" />
-            <RadioButton layoutX="317.0" layoutY="137.0" mnemonicParsing="false"  text="Female" />
+            <RadioButton layoutX="222.0" layoutY="137.0" mnemonicParsing="false" text="Male" />
+            <RadioButton layoutX="317.0" layoutY="137.0" mnemonicParsing="false" text="Female" />
             <TextField fx:id="username" layoutX="219.0" layoutY="91.0" />
             <TextField fx:id="fullname" layoutX="219.0" layoutY="51.0" />
             <Label layoutX="101.0" layoutY="48.0" text="Full Name" />
@@ -28,6 +27,10 @@
                   <Font size="29.0" />
                </font>
             </Label>
+            <Label fx:id="user_exists" layoutX="218.0" layoutY="344.0" text="Username already registered" textFill="#c30a0a" visible="false" />
+            <Label fx:id="pwd_match" layoutX="412.0" layoutY="223.0" text="Password does not match" textFill="#dd1313" visible="false" />
+            <Label fx:id="username_empty" layoutX="412.0" layoutY="96.0" text="Username can't be empty" textFill="#f21313" visible="false" />
+            <Label fx:id="pwd_empty" layoutX="414.0" layoutY="179.0" text="Password can't be empty" textFill="#da1515" visible="false" />
          </children>
       </Pane>
    </children>

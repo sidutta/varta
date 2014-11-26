@@ -33,6 +33,9 @@ import javafx.stage.Stage;
 import varta.Client;
 
 
+
+
+
 public class ChatController {
 
 
@@ -59,7 +62,16 @@ public class ChatController {
 	
 	@FXML
 	public HashMap<String,javafx.scene.control.Button>  recToButton = new HashMap<String,javafx.scene.control.Button>();
-
+	
+	@FXML
+	public Button snap;
+	
+	@FXML
+	public Button p2p;
+	
+	@FXML
+	public Button video;
+	
 	private static int flag = 0; 
 
 	private Integer offset =0;
@@ -79,7 +91,7 @@ public class ChatController {
 		System.out.println(LoginController.client.getUsername());
 		LoginController.client.setController(this);
     	chatBox.setEditable(false);
-    	
+    	//Aditya N Detec if the sender is typing
     	sendMsg.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
              @Override
              public void handle(KeyEvent event) {
@@ -95,12 +107,19 @@ public class ChatController {
 
 			String recId=receiverId.getText();
 			String msgText=sendMsg.getText();
-			Integer time = timeToLive.getMinorTickCount();
 			if(!recId.equals("") && !msgText.equals(""))
 			{
-				System.out.println("Sending ...");
-				LoginController.client.processMessage(LoginController.client.getUsername(),recId,msgText,time);
-				Packet temp = new Packet(4, LoginController.client.getUsername(), recId, msgText,time);
+				System.out.println("Sending ...111");
+				System.out.println(recId);
+				if(!LoginController.client.talkingTo.contains(recId)){
+					System.out.println("asdfghjk");
+					LoginController.client.talkingTo.add(recId);
+					openNewTab(new Packet(9,recId,recId,null));
+				}
+			
+				LoginController.client.processMessage(LoginController.client.getUsername(),recId,msgText);
+				//Aditya N create a new packet (send to self) and add the packets to appropraite Array List
+				Packet temp = new Packet(4, LoginController.client.getUsername(), recId, msgText);
 				if(LoginController.client.allChats.containsKey(recId))
 				LoginController.client.allChats.get(recId).add(temp);
 				else
@@ -109,29 +128,76 @@ public class ChatController {
 					temp1.add(temp);
 					LoginController.client.allChats.put(recId,temp1);
 				}
-				System.out.println("time "+time);
-				chatBox.appendText("Me: "+msgText+"\n");
+				
+				chatBox.setText("");
+//            	System.out.println("Mihir maxxx");
+//            	for(int i=0; i<LoginController.client.allChats.get(sender).size(); i++){
+//	            	   System.out.println(LoginController.client.allChats.get(sender).get(i).getMessage());
+//	            	    
+//	            			   
+//	               }
+//				System.out.println("------");
+								
+
+               for(int i=0; i<LoginController.client.allChats.get(recId).size(); i++){
+            	   Packet temp2 = LoginController.client.allChats.get(recId).get(i);
+            	   
+            	   if(temp2.getType() == 4){
+            		   printMessage("Me",temp2.getMessage());
+
+            	   }
+            	   else if( temp2.getType() ==1 ){
+
+            		   printMessage(temp2.getSender(),temp2.getMessage());
+            	   }
+            	   else if(temp2.getType() == 6){
+            		   printMessage(null,"---"+temp2.getMessage()+"--- \n");
+            	   }
+            			   
+               }
+            
+				
+
+				//chatBox.appendText("Me: "+msgText+"\n");
 				sendMsg.setText("");
+			
 			}
-		});
-		
+			
+			
 //		happy.setOnMouseClicked((event) -> {
 //			sendMsg.appendText(":)");
 //		});
 		
-	}
+	});
+		
+		snap.setOnAction((event) -> {
+			String recId=receiverId.getText();
+
+			String rand_str = "";
+				try {
+					rand_str =RandomStringGenerator.generateRandomString(10,RandomStringGenerator.Mode.ALPHANUMERIC);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				LoginController.client.processMessage(LoginController.client.getUsername(),recId,rand_str);
+					
+		});
+
+		
 	
+	}
+	//Aditya => Used by tasker
 	class SayHello extends TimerTask {
 		
 		
 			public void run() {
-				System.out.println("Dfdsffdsfsdfsdffsd");
                setup();
             }
 	
 
 	 }
-	
+	//Aditya N => Restore the id back from ..typing to normal
 	@FXML
 	public void setup(){
 		Platform.runLater(new Runnable() {
@@ -143,10 +209,23 @@ public class ChatController {
 		});
 	}
 	
+//	//Sh: To show the status of the message sent
+//		public void printStatus(Packet p)
+//		{
+//			Platform.runLater(new Runnable() {
+//				@Override
+//				public void run() {
+//					LoginController.client.allChats.get(p.getSender()).add(p);    	      
+//				}
+//			});
+//
+//		}
+		
+	//Aditya N => When it gets a type 5 packet make it ..is typing
 	public void printIsTyping(String sender)
 	{
 		Platform.runLater(new Runnable() {
-			@Override
+			@Override 
 			public void run() {
 				System.out.println("yoyo "+sender+" "+LoginController.client.getUsername() );
 				if( receiverId.getText().equals(sender)){
@@ -165,19 +244,25 @@ public class ChatController {
 
 	}
 	
-	
+	@FXML
+	public String getRec(){
+		return receiverId.getText();
+	}
 	public void printMessage(String sender, String message)
 	{
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println(message);
-				chatBox.appendText(sender+": "+message+"\n");    	      
+				if(sender!=null)
+				chatBox.appendText(sender+": "+message+"\n");    
+				else
+				chatBox.appendText(message);    
+
 			}
 		});
 
 	}
-	
+	//Aditya N => make the tab green in color
 	@FXML
 	public void makeGreen(String sender){
 		Platform.runLater(new Runnable() {
@@ -190,22 +275,63 @@ public class ChatController {
 	}
 	
 	@FXML
-	public void openNewTab(String sender){
+	public void makeBlue(String sender){
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				
+				recToButton.get(sender).setStyle("-fx-background-color:#99CCFF");;
+			}
+		});
+	}
+	
+	@FXML
+	public void makeGrey(String sender){
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				
+				recToButton.get(sender).setStyle("-fx-background-color:#E0E0E0");;
+			}
+		});
+	}
+	//Aditya N when a new user comes to chat open a new tab for him
+	@FXML
+	public void openNewTab(Packet p){
 		
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
+				String sender;
+				if(p.getType()==9){
+				 sender = p.getReceiver();	
+				}
+				else
+				sender = p.getSender();
+				
 				Button tp = new Button(sender);
 				//LoginController.client.recToButton.put(sender, tp);
 				tp.setLayoutY(10+offset);
 				tp.setMinWidth(125);
 				tp.setMaxWidth(125);
-				tp.setStyle("-fx-background-color:#CCFFCC");;
+				if(p.getType() != 9){
+			        if(p.getType() != 6)
+					tp.setStyle("-fx-background-color:#CCFFCC");
+					else
+				    tp.setStyle("-fx-background-color:#99CCFF");
+				}
+				else
+					tp.setStyle("-fx-background-color:#E0E0E0");
+				
+				System.out.println("heeee");
+
 				recToButton.put(sender, tp);
 				tp.setOnAction(new EventHandler<ActionEvent>() {
 					
 					@Override
 		            public void handle(ActionEvent event) {
+						System.out.println("Its Wokring");
+						System.out.println(event);
 		            	chatBox.setText("");
 //		            	System.out.println("Mihir maxxx");
 //		            	for(int i=0; i<LoginController.client.allChats.get(sender).size(); i++){
@@ -229,7 +355,9 @@ public class ChatController {
 
 		            		   printMessage(temp.getSender(),temp.getMessage());
 		            	   }
-		            	    
+		            	   else if(temp.getType() == 6){
+		            		   printMessage(null,"---"+temp.getMessage()+"--- \n");
+		            	   }
 		            			   
 		               }
 		            }
