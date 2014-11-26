@@ -11,14 +11,12 @@
    <children>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
          <children>
-          <fx:define>
-        <ToggleGroup fx:id="gender"/>
-         </fx:define>
+         
             <Button fx:id="signup_button" layoutX="261.0" layoutY="290.0" mnemonicParsing="false" text="Sign Up" />
             <PasswordField fx:id="confirmpasswd" layoutX="222.0" layoutY="218.0" />
             <PasswordField fx:id="passwd" layoutX="222.0" layoutY="174.0" />
-            <RadioButton layoutX="222.0" layoutY="137.0" mnemonicParsing="false" toggleGroup="gender"  text="Male" />
-            <RadioButton layoutX="317.0" layoutY="137.0" mnemonicParsing="false"  toggleGroup="gender" text="Female" />
+            <RadioButton layoutX="222.0" layoutY="137.0" mnemonicParsing="false"   text="Male" />
+            <RadioButton layoutX="317.0" layoutY="137.0" mnemonicParsing="false"  text="Female" />
             <TextField fx:id="username" layoutX="219.0" layoutY="91.0" />
             <TextField fx:id="fullname" layoutX="219.0" layoutY="51.0" />
             <Label layoutX="101.0" layoutY="48.0" text="Full Name" />

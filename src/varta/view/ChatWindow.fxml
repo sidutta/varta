@@ -18,13 +18,13 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextArea fx:id="sendMsg" layoutX="206.0" layoutY="371.0" prefHeight="123.0" prefWidth="188.0" />
-            <Button fx:id="sendButton" layoutX="398.0" layoutY="372.0" mnemonicParsing="false" prefHeight="123.0" prefWidth="100.0" text="SEND">
+            <TextArea fx:id="sendMsg" layoutX="189.0" layoutY="372.0" prefHeight="99.0" prefWidth="172.0" />
+            <Button fx:id="sendButton" layoutX="398.0" layoutY="372.0" mnemonicParsing="false" prefHeight="99.0" prefWidth="100.0" text="SEND">
                <font>
                   <Font size="24.0" />
                </font>
             </Button>
-            <TextArea fx:id="chatBox" layoutX="205.0" layoutY="49.0" prefHeight="318.0" prefWidth="293.0" />
+            <TextArea fx:id="chatBox" layoutX="192.0" layoutY="49.0" prefHeight="318.0" prefWidth="306.0" />
             <!-- <ToolBar layoutX="209.0" layoutY="374.0" prefHeight="28.0" prefWidth="287.0">
                <items>
                   <ImageView fx:id="happy" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
@@ -34,7 +34,8 @@
                   </ImageView>
                </items>
             </ToolBar> -->
-            <AnchorPane fx:id="friends" layoutX="3.0" layoutY="49.0" prefHeight="399.0" prefWidth="200.0" />
+            <AnchorPane fx:id="friends" layoutX="3.0" layoutY="49.0" prefHeight="399.0" prefWidth="182.0" />
+            <Slider fx:id="timeToLive" layoutX="369.0" layoutY="369.0" orientation="VERTICAL" prefHeight="105.0" prefWidth="16.0" />
          </children>
       </AnchorPane>
    </children>

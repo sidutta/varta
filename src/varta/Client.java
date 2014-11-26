@@ -7,6 +7,9 @@ import java.net.*;
 import java.util.*;
 
 import varta.view.ChatController;
+import varta.view.LoginController;
+import javafx.scene.control.Button;
+
 
 public class Client extends Panel implements Runnable {
 	
@@ -20,7 +23,8 @@ public class Client extends Panel implements Runnable {
 	private final String username;
 	private ChatController chatController;
 	private Set<String>  talkingTo =new HashSet<String>();
-
+	public HashMap<String,ArrayList<Packet>> allChats = new HashMap<String,ArrayList<Packet>>();
+	
 	public Client( String host, String user,int port ) {
 		
 		username=user;
@@ -64,9 +68,9 @@ public class Client extends Panel implements Runnable {
 		} catch( IOException ie ) { System.out.println( ie ); }
 	}
 
-	public void processMessage( String sender, String receiver, String message ) {
+	public void processMessage( String sender, String receiver, String message, Integer time ) {
 		try {
-			dout.writeObject( new Packet(1, sender, receiver, message) );
+			dout.writeObject( new Packet(1, sender, receiver, message,time) );
 			dout.flush();
 			//displayta.append("Me: " + message + "\n");
 			//messagetf.setText( "" );
@@ -76,7 +80,7 @@ public class Client extends Panel implements Runnable {
 	
 	public void connMessage( String sender, String receiver, String message ) {
 		try {
-			dout.writeObject( new Packet(0, sender, receiver, message) );
+			dout.writeObject( new Packet(0, sender, receiver, message, 100) );
 			dout.flush();
 			//displayta.append("Me: " + message + "\n");
 			//messagetf.setText( "" );
@@ -91,11 +95,28 @@ public class Client extends Panel implements Runnable {
 					packet = (Packet) din.readObject();
 					System.out.println(username+" got a message.");
 					if(!talkingTo.contains(packet.getSender())){
-						System.out.println("New Sender");
 						talkingTo.add(packet.getSender());
 						chatController.openNewTab(packet.getSender());
 					}
-					chatController.printMessage(packet.getSender(),packet.getMessage());
+					if(allChats.containsKey(packet.getSender()))
+					{allChats.get(packet.getSender()).add(packet) ;
+//					System.out.println("Printing All Chats ");
+//					 for(int i=0; i<allChats.get(packet.getSender()).size(); i++){
+//		            	   System.out.println(allChats.get(packet.getSender()).get(i).getMessage());   			   
+//		               }
+//					System.out.println("------");
+					chatController.makeGreen(packet.getSender());
+					//recToButton.get(packet.getSender()).setStyle("-fx-background-color:#CCFFCC");;
+					}
+					else
+					{   ArrayList<Packet> temp = new ArrayList<Packet>();
+						temp.add(packet);
+						allChats.put(packet.getSender(),temp);
+						//recToButton.get(packet.getSender()).setStyle("-fx-background-color:#CCFFCC");;
+
+					}
+						
+					//chatController.printMessage(packet.getSender(),packet.getMessage());
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
