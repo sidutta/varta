@@ -5,6 +5,7 @@ import varta.Client;
 
 
 import varta.Packet;
+import varta.RandomStringGenerator;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -14,8 +15,10 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import multimedia.WebcamViewerExample;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -31,6 +34,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import varta.Client;
+import multimedia.*;
 
 
 
@@ -71,6 +75,12 @@ public class ChatController {
 	
 	@FXML
 	public Button video;
+	
+	@FXML
+	public Button view_video;
+	
+	@FXML
+	public Button view_pic;
 	
 	private static int flag = 0; 
 
@@ -156,7 +166,8 @@ public class ChatController {
             			   
                }
             
-				
+				recToButton.get(recId).setStyle("-fx-background-color:#E0E0E0");;
+
 
 				//chatBox.appendText("Me: "+msgText+"\n");
 				sendMsg.setText("");
@@ -171,21 +182,24 @@ public class ChatController {
 	});
 		
 		snap.setOnAction((event) -> {
-			String recId=receiverId.getText();
+			new Thread(new WebcamViewerExample()).start();
 
-			String rand_str = "";
-				try {
-					rand_str =RandomStringGenerator.generateRandomString(10,RandomStringGenerator.Mode.ALPHANUMERIC);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				LoginController.client.processMessage(LoginController.client.getUsername(),recId,rand_str);
+			
+				
+//				LoginController.client.connMessage(10,LoginController.client.getUsername(),recId,rand_str);
 					
 		});
 
-		
-	
+		view_pic.setOnAction((event) -> {
+			if(LoginController.client.SAV.containsKey(receiverId.getText())){
+				Packet p =LoginController.client.SAV.get(receiverId.getText()).peek();
+				//LoginController.client.SAV.get(receiverId.getText()).remove();
+				LoginController.client.imp = p.getMessage();
+				new LoadImage( p.getMessage());
+				//Application.launch(LoadImage.class);
+				//p.getMessage()
+			}
+		});	
 	}
 	//Aditya => Used by tasker
 	class SayHello extends TimerTask {
@@ -263,38 +277,28 @@ public class ChatController {
 
 	}
 	//Aditya N => make the tab green in color
-	@FXML
-	public void makeGreen(String sender){
+	
+	public void makeColor(String sender,String color){
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				
-				recToButton.get(sender).setStyle("-fx-background-color:#CCFFCC");;
+				recToButton.get(sender).setStyle("-fx-background-color:"+color);
 			}
 		});
 	}
 	
-	@FXML
-	public void makeBlue(String sender){
+	public void change_pic(){
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				
-				recToButton.get(sender).setStyle("-fx-background-color:#99CCFF");;
+				view_pic.setStyle("-fx-background-color:#FF66FF");
 			}
 		});
 	}
-	
-	@FXML
-	public void makeGrey(String sender){
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				
-				recToButton.get(sender).setStyle("-fx-background-color:#E0E0E0");;
-			}
-		});
-	}
+
+
 	//Aditya N when a new user comes to chat open a new tab for him
 	@FXML
 	public void openNewTab(Packet p){

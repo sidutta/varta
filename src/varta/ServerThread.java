@@ -99,7 +99,7 @@ public class ServerThread extends Thread
 			try
 			{
 			Statement st=Server.conn.createStatement();	
-			ResultSet rs=st.executeQuery("SELECT sender,message FROM msg_buffer where receiver='"
+			ResultSet rs=st.executeQuery("SELECT sender,message,status FROM msg_buffer where receiver='"
 			+username+"' order by sender,sno");
 			String sendflag=null;
 			String sender=null;
@@ -107,11 +107,12 @@ public class ServerThread extends Thread
 			{
 				
 				sender=rs.getString("sender");
+				int status=rs.getInt("status");
 				String message=rs.getString("message");
 				System.out.println("sender: "+ sender);
 				System.out.println("receiver: "+ username);
 				System.out.println("message: "+ message);
-				server.forwardToReceiver( new Packet(1,sender,username,message));
+				server.forwardToReceiver( new Packet(status,sender,username,message));
 				System.out.println( "Sending " + packet );
 				if (!sender.equals(sendflag))
 				{

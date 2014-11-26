@@ -90,6 +90,21 @@ public class Server {
 			}
 			
 		}
+		else if(packet.getType()==10)
+		{/*Sh:Add the message to msg_buffer in the database to send it later*/
+			try
+			{
+			PreparedStatement pstmt = conn.prepareStatement("insert into msg_buffer(sender,receiver,message,status) values('"
+					+ packet.getSender()+"','"+packet.getReceiver()+"',?,'10')");	
+			pstmt.setString(1,packet.getMessage());
+			pstmt.executeUpdate();
+			System.out.println("Message added to buffer");
+			}
+			catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			
+		}
 	}
 
 	void removeConnection( Socket s ) {

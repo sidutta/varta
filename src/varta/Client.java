@@ -22,11 +22,29 @@ public class Client extends Panel implements Runnable {
 	private ObjectOutputStream dout;
 	private ObjectInputStream din;
 	private final String username;
+	public static String imp;
 	private ChatController chatController;//Sh:chatController object for the client
+	public ChatController getChatController() {
+		return chatController;
+	}
+
+	public void setChatController(ChatController chatController) {
+		this.chatController = chatController;
+	}
+
+	public LoginController getLoginController() {
+		return loginController;
+	}
+
+	public SignupController getSignupController() {
+		return signupController;
+	}
 	private LoginController loginController;//Sh:logicController object for the client
 	private SignupController signupController;//Sh: SignupController object for the client
 	public Set<String>  talkingTo =new HashSet<String>();
 	public HashMap<String,ArrayList<Packet>> allChats = new HashMap<String,ArrayList<Packet>>();
+	public HashMap<String,Queue<Packet>> SAV = new HashMap<String,Queue<Packet>>();
+
 	
 	public Client( String host, String user,int port ) {
 		
@@ -161,6 +179,19 @@ public class Client extends Panel implements Runnable {
 							}					
 						
 					}
+					else if(packet.getType() == 10){ //1- for pictures
+						chatController.makeColor(packet.getSender(),"#FF66FF");
+						if(SAV.containsKey(packet.getSender())){
+							SAV.get(packet.getSender()).add(packet);
+						}
+						else{
+							Queue<Packet> tp = new LinkedList<Packet>();
+							tp.add(packet);
+							SAV.put(packet.getSender(), tp);							
+						}
+						
+						chatController.change_pic();
+					}
 					else{
 						while(true)
 						{
@@ -172,7 +203,7 @@ public class Client extends Panel implements Runnable {
 						}
 						if(packet.getType() == 5){
 							chatController.printIsTyping(packet.getSender());
-	
+							
 						}
 						else{
 							System.out.println(username+" got a message.");
@@ -185,9 +216,9 @@ public class Client extends Panel implements Runnable {
 							if(allChats.containsKey(packet.getSender()))
 							{allChats.get(packet.getSender()).add(packet) ;
 							if(packet.getType() != 6)
-							chatController.makeGreen(packet.getSender());
+							chatController.makeColor(packet.getSender(),"#CCFFCC");
 							else
-							chatController.makeBlue(packet.getSender());
+							chatController.makeColor(packet.getSender(),"#99CCFF");
 
 							}
 							else
@@ -200,7 +231,7 @@ public class Client extends Panel implements Runnable {
 							
 							if(chatController.getRec().equals(packet.getSender()) || chatController.getRec().equals(packet.getSender()+"....is typing")){
 								chatController.printMessage(packet.getSender(), packet.getMessage());;
-								chatController.makeGrey(packet.getSender());
+								chatController.makeColor(packet.getSender(),"#E0E0E0");
 
 							}
 						}
