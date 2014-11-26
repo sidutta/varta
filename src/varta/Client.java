@@ -76,6 +76,15 @@ public class Client extends Panel implements Runnable {
 			//messagetf.setText( "" );
 		} catch( IOException ie ) { System.out.println( ie ); }
 	}
+	
+	public void isTyping( String sender, String receiver ) {
+		try {
+			dout.writeObject( new Packet(5, sender, receiver, null,10) );
+			dout.flush();
+			//displayta.append("Me: " + message + "\n");
+			//messagetf.setText( "" );
+		} catch( IOException ie ) { System.out.println( ie ); }
+	}
 
 	
 	public void connMessage( String sender, String receiver, String message ) {
@@ -93,27 +102,33 @@ public class Client extends Panel implements Runnable {
 				Packet packet = null;
 				try {
 					packet = (Packet) din.readObject();
-					System.out.println(username+" got a message.");
-					if(!talkingTo.contains(packet.getSender())){
-						talkingTo.add(packet.getSender());
-						chatController.openNewTab(packet.getSender());
-					}
-					if(allChats.containsKey(packet.getSender()))
-					{allChats.get(packet.getSender()).add(packet) ;
-//					System.out.println("Printing All Chats ");
-//					 for(int i=0; i<allChats.get(packet.getSender()).size(); i++){
-//		            	   System.out.println(allChats.get(packet.getSender()).get(i).getMessage());   			   
-//		               }
-//					System.out.println("------");
-					chatController.makeGreen(packet.getSender());
-					//recToButton.get(packet.getSender()).setStyle("-fx-background-color:#CCFFCC");;
-					}
-					else
-					{   ArrayList<Packet> temp = new ArrayList<Packet>();
-						temp.add(packet);
-						allChats.put(packet.getSender(),temp);
-						//recToButton.get(packet.getSender()).setStyle("-fx-background-color:#CCFFCC");;
+					if(packet.getType() == 5){
+						chatController.printIsTyping(packet.getSender());
 
+					}
+					else{
+						System.out.println(username+" got a message.");
+						if(!talkingTo.contains(packet.getSender())){
+							talkingTo.add(packet.getSender());
+							chatController.openNewTab(packet.getSender());
+						}
+						if(allChats.containsKey(packet.getSender()))
+						{allChats.get(packet.getSender()).add(packet) ;
+	//					System.out.println("Printing All Chats ");
+	//					 for(int i=0; i<allChats.get(packet.getSender()).size(); i++){
+	//		            	   System.out.println(allChats.get(packet.getSender()).get(i).getMessage());   			   
+	//		               }
+	//					System.out.println("------");
+						chatController.makeGreen(packet.getSender());
+						//recToButton.get(packet.getSender()).setStyle("-fx-background-color:#CCFFCC");;
+						}
+						else
+						{   ArrayList<Packet> temp = new ArrayList<Packet>();
+							temp.add(packet);
+							allChats.put(packet.getSender(),temp);
+							//recToButton.get(packet.getSender()).setStyle("-fx-background-color:#CCFFCC");;
+	
+						}
 					}
 						
 					//chatController.printMessage(packet.getSender(),packet.getMessage());

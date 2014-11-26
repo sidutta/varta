@@ -9,7 +9,10 @@ import varta.Packet;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +26,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -56,8 +60,13 @@ public class ChatController {
 	@FXML
 	public HashMap<String,javafx.scene.control.Button>  recToButton = new HashMap<String,javafx.scene.control.Button>();
 
-	
+	private static int flag = 0; 
+
 	private Integer offset =0;
+	
+	private Timer timer = new Timer();
+
+	private String tempsender ="";
 	
 	public ChatController() {
 	}
@@ -70,6 +79,17 @@ public class ChatController {
 		System.out.println(LoginController.client.getUsername());
 		LoginController.client.setController(this);
     	chatBox.setEditable(false);
+    	
+    	sendMsg.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+             @Override
+             public void handle(KeyEvent event) {
+                 // Do not filter for TextFields
+     			String recId=receiverId.getText();
+
+            	 LoginController.client.isTyping(LoginController.client.getUsername(),recId);
+             }
+         });
+
 
 		sendButton.setOnAction((event) -> {
 
@@ -100,7 +120,52 @@ public class ChatController {
 //		});
 		
 	}
+	
+	class SayHello extends TimerTask {
+		
+		
+			public void run() {
+				System.out.println("Dfdsffdsfsdfsdffsd");
+               setup();
+            }
+	
 
+	 }
+	
+	@FXML
+	public void setup(){
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				
+			    receiverId.setText(tempsender);   	      
+			}
+		});
+	}
+	
+	public void printIsTyping(String sender)
+	{
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("yoyo "+sender+" "+LoginController.client.getUsername() );
+				if( receiverId.getText().equals(sender)){
+					System.out.println("comeon");
+					receiverId.setText(sender+"....is typing");
+					receiverId.setStyle( "-fx-font-style: italic;");
+					tempsender=sender;
+					timer.schedule(new SayHello(), 2500);
+					
+					
+				}
+				
+				
+			}
+		});
+
+	}
+	
+	
 	public void printMessage(String sender, String message)
 	{
 		Platform.runLater(new Runnable() {
