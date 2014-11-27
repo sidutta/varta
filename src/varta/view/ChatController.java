@@ -45,6 +45,9 @@ public class ChatController {
 
 	@FXML
 	private ImageView happy;
+	
+	@FXML
+	private Button webcam;
 
 	@FXML
 	private Button sendButton;
@@ -119,7 +122,7 @@ public class ChatController {
 			String msgText=sendMsg.getText();
 			if(!recId.equals("") && !msgText.equals(""))
 			{
-				System.out.println("Sending ...111");
+				System.out.println("Sending ...");
 				System.out.println(recId);
 				if(!LoginController.client.talkingTo.contains(recId)){
 					System.out.println("asdfghjk");
@@ -180,26 +183,45 @@ public class ChatController {
 //		});
 		
 	});
-		
+		video.setOnAction((event) -> {
+			
+			//Encoder e=new Encoder();
+			new Thread(new Encoder()).start();
+				
+	});
+
 		snap.setOnAction((event) -> {
 			new Thread(new WebcamViewerExample()).start();
 
 			
 				
-//				LoginController.client.connMessage(10,LoginController.client.getUsername(),recId,rand_str);
 					
 		});
+		
+		
 
 		view_pic.setOnAction((event) -> {
-			if(LoginController.client.SAV.containsKey(receiverId.getText())){
-				Packet p =LoginController.client.SAV.get(receiverId.getText()).peek();
-				//LoginController.client.SAV.get(receiverId.getText()).remove();
-				LoginController.client.imp = p.getMessage();
+			while(LoginController.client.SnapQ.containsKey(receiverId.getText()) || LoginController.client.SnapQ.get(receiverId.getText()).size() != 0 ){
+				Packet p =LoginController.client.SnapQ.get(receiverId.getText()).peek();
+				
+				LoginController.client.SnapQ.get(receiverId.getText()).remove();
 				new LoadImage( p.getMessage());
 				//Application.launch(LoadImage.class);
 				//p.getMessage()
 			}
 		});	
+		
+		view_video.setOnAction((event) -> {
+		
+			while(LoginController.client.VideoQ.containsKey(receiverId.getText()) || LoginController.client.VideoQ.get(receiverId.getText()).size() != 0){
+				Packet p =LoginController.client.VideoQ.get(receiverId.getText()).peek();
+				LoginController.client.VideoQ.get(receiverId.getText()).remove();
+				new EmbeddedMediaPlayer(p.getMessage());
+				//new LoadImage( p.getMessage());
+				//Application.launch(LoadImage.class);
+				//p.getMessage()
+			}
+		});
 	}
 	//Aditya => Used by tasker
 	class SayHello extends TimerTask {
@@ -298,6 +320,15 @@ public class ChatController {
 		});
 	}
 
+	public void video_pic(){
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				
+				view_video.setStyle("-fx-background-color:#CCFFFF");
+			}
+		});
+	}
 
 	//Aditya N when a new user comes to chat open a new tab for him
 	@FXML
@@ -307,6 +338,7 @@ public class ChatController {
 			@Override
 			public void run() {
 				String sender;
+
 				if(p.getType()==9){
 				 sender = p.getReceiver();	
 				}
@@ -314,6 +346,8 @@ public class ChatController {
 				sender = p.getSender();
 				
 				Button tp = new Button(sender);
+				recToButton.put(sender, tp);
+
 				//LoginController.client.recToButton.put(sender, tp);
 				tp.setLayoutY(10+offset);
 				tp.setMinWidth(125);
@@ -329,7 +363,6 @@ public class ChatController {
 				
 				System.out.println("heeee");
 
-				recToButton.put(sender, tp);
 				tp.setOnAction(new EventHandler<ActionEvent>() {
 					
 					@Override
@@ -347,25 +380,25 @@ public class ChatController {
 						
 						receiverId.setText(sender);
 						tp.setStyle("-fx-background-color:#E0E0E0");;
-
-		               for(int i=0; i<LoginController.client.allChats.get(sender).size(); i++){
-		            	   Packet temp = LoginController.client.allChats.get(sender).get(i);
-		            	   
-		            	   if(temp.getType() == 4){
-		            		   printMessage("Me",temp.getMessage());
-
-		            	   }
-		            	   else if( temp.getType() ==1 ){
-
-		            		   printMessage(temp.getSender(),temp.getMessage());
-		            	   }
-		            	   else if(temp.getType() == 6){
-		            		   printMessage(null,"---"+temp.getMessage()+"--- \n");
-		            	   }
-		            			   
-		               }
-		            }
-		            
+					if(LoginController.client.allChats.containsKey(sender)){
+			               for(int i=0; i<LoginController.client.allChats.get(sender).size(); i++){
+			            	   Packet temp = LoginController.client.allChats.get(sender).get(i);
+			            	   
+			            	   if(temp.getType() == 4){
+			            		   printMessage("Me",temp.getMessage());
+	
+			            	   }
+			            	   else if( temp.getType() ==1 ){
+	
+			            		   printMessage(temp.getSender(),temp.getMessage());
+			            	   }
+			            	   else if(temp.getType() == 6){
+			            		   printMessage(null,"---"+temp.getMessage()+"--- \n");
+			            	   }
+			            			   
+			               }
+			            }
+					}
 					
 					
 		            

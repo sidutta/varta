@@ -9,7 +9,7 @@ public class Server {
 	private ServerSocket ss;
 	public Map<String, Socket> usernameSocketMapping = new HashMap<String, Socket>();	
 	private Hashtable<Socket, ObjectOutputStream> outputStreams = new Hashtable<Socket, ObjectOutputStream>();
-
+	
 	//Sh:Set of online clients
 	public Set<String> isAlive = new HashSet<String>();
 	//Sh:Connection variable
@@ -29,6 +29,8 @@ public class Server {
 			System.out.println( "Connection from "+s );
 			ObjectOutputStream dout = new ObjectOutputStream( s.getOutputStream() );
 			outputStreams.put( s, dout );
+
+			System.out.println("ip is "+s.getRemoteSocketAddress().toString());
 			new ServerThread( this, s );
 		}
 	}
@@ -96,6 +98,21 @@ public class Server {
 			{
 			PreparedStatement pstmt = conn.prepareStatement("insert into msg_buffer(sender,receiver,message,status) values('"
 					+ packet.getSender()+"','"+packet.getReceiver()+"',?,'10')");	
+			pstmt.setString(1,packet.getMessage());
+			pstmt.executeUpdate();
+			System.out.println("Message added to buffer");
+			}
+			catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			
+		}
+		else if(packet.getType()==11)
+		{/*Sh:Add the message to msg_buffer in the database to send it later*/
+			try
+			{
+			PreparedStatement pstmt = conn.prepareStatement("insert into msg_buffer(sender,receiver,message,status) values('"
+					+ packet.getSender()+"','"+packet.getReceiver()+"',?,'11')");	
 			pstmt.setString(1,packet.getMessage());
 			pstmt.executeUpdate();
 			System.out.println("Message added to buffer");

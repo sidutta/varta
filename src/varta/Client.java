@@ -22,7 +22,6 @@ public class Client extends Panel implements Runnable {
 	private ObjectOutputStream dout;
 	private ObjectInputStream din;
 	private final String username;
-	public static String imp;
 	private ChatController chatController;//Sh:chatController object for the client
 	public ChatController getChatController() {
 		return chatController;
@@ -43,7 +42,8 @@ public class Client extends Panel implements Runnable {
 	private SignupController signupController;//Sh: SignupController object for the client
 	public Set<String>  talkingTo =new HashSet<String>();
 	public HashMap<String,ArrayList<Packet>> allChats = new HashMap<String,ArrayList<Packet>>();
-	public HashMap<String,Queue<Packet>> SAV = new HashMap<String,Queue<Packet>>();
+	public HashMap<String,Queue<Packet>> SnapQ = new HashMap<String,Queue<Packet>>();
+	public HashMap<String,Queue<Packet>> VideoQ = new HashMap<String,Queue<Packet>>();
 
 	
 	public Client( String host, String user,int port ) {
@@ -111,6 +111,7 @@ public class Client extends Panel implements Runnable {
 	//Messages for connection
 	public void connMessage(int type ,String sender, String receiver, String message ) {
 		try {
+			System.out.println("Random String "+ message);
 			dout.writeObject( new Packet(type, sender, receiver, message) );
 			dout.flush();
 			//displayta.append("Me: " + message + "\n");
@@ -180,17 +181,42 @@ public class Client extends Panel implements Runnable {
 						
 					}
 					else if(packet.getType() == 10){ //1- for pictures
-						chatController.makeColor(packet.getSender(),"#FF66FF");
-						if(SAV.containsKey(packet.getSender())){
-							SAV.get(packet.getSender()).add(packet);
+						if(!talkingTo.contains(packet.getSender())){
+							talkingTo.add(packet.getSender());
+							chatController.openNewTab(packet);
+						}
+
+						if(SnapQ.containsKey(packet.getSender())){
+							SnapQ.get(packet.getSender()).add(packet);
 						}
 						else{
 							Queue<Packet> tp = new LinkedList<Packet>();
 							tp.add(packet);
-							SAV.put(packet.getSender(), tp);							
+							SnapQ.put(packet.getSender(), tp);							
 						}
-						
+						chatController.makeColor(packet.getSender(),"#FF66FF");
+
 						chatController.change_pic();
+					}
+					else if(packet.getType() == 11){
+						if(!talkingTo.contains(packet.getSender())){
+							talkingTo.add(packet.getSender());
+							chatController.openNewTab(packet);
+						}
+
+						if(VideoQ.containsKey(packet.getSender())){
+							VideoQ.get(packet.getSender()).add(packet);
+						}
+						else{
+							Queue<Packet> tp = new LinkedList<Packet>();
+							tp.add(packet);
+							VideoQ.put(packet.getSender(), tp);							
+						}
+						chatController.makeColor(packet.getSender(),"#CCFFFF");
+
+						chatController.video_pic();
+
+						
 					}
 					else{
 						while(true)
