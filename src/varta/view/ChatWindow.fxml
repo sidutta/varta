@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.web.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
@@ -8,23 +10,23 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="547.0" prefWidth="582.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="varta.view.ChatController">
+<AnchorPane prefHeight="648.0" prefWidth="857.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="varta.view.ChatController">
    <children>
-      <AnchorPane layoutX="9.0" layoutY="-1.0" prefHeight="547.0" prefWidth="574.0">
+      <AnchorPane prefHeight="648.0" prefWidth="895.0">
          <children>
-            <TextField fx:id="receiverId" layoutX="246.0" layoutY="11.0" prefHeight="30.0" prefWidth="324.0" AnchorPane.leftAnchor="246.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="11.0" />
+            <TextField fx:id="receiverId" layoutX="230.0" layoutY="11.0" prefHeight="30.0" prefWidth="328.0" AnchorPane.leftAnchor="230.0" AnchorPane.rightAnchor="299.0" AnchorPane.topAnchor="11.0">
+               <contextMenu>
+                  <ContextMenu fx:id="friendMenu">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                    </items>
+                  </ContextMenu>
+               </contextMenu></TextField>
             <Label layoutX="195.0" layoutY="15.0" text="To:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextArea fx:id="sendMsg" layoutX="249.0" layoutY="372.0" prefHeight="55.0" prefWidth="172.0" />
-            <Button fx:id="sendButton" layoutX="447.0" layoutY="372.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="100.0" text="SEND">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Button>
-            <TextArea fx:id="chatBox" layoutX="246.0" layoutY="49.0" prefHeight="318.0" prefWidth="306.0" />
             <!-- <ToolBar layoutX="209.0" layoutY="374.0" prefHeight="28.0" prefWidth="287.0">
                <items>
                   <ImageView fx:id="happy" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
@@ -34,43 +36,58 @@
                   </ImageView>
                </items>
             </ToolBar> -->
-            <AnchorPane fx:id="friends" layoutX="3.0" layoutY="49.0" prefHeight="376.0" prefWidth="180.0" />
-            <Slider fx:id="timeToLive" layoutX="552.0" layoutY="383.0" orientation="VERTICAL" prefHeight="126.0" prefWidth="16.0" />
-            <Button fx:id="snap" layoutX="189.0" layoutY="455.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="84.0" text="Send Snap">
+            <AnchorPane fx:id="friends" layoutX="13.0" layoutY="49.0" prefHeight="405.0" prefWidth="173.0" AnchorPane.bottomAnchor="194.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="709.0" AnchorPane.topAnchor="49.0" />
+            <Slider fx:id="timeToLive" layoutX="196.0" layoutY="462.0" orientation="VERTICAL" prefHeight="147.0" prefWidth="16.0" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="196.0" AnchorPane.rightAnchor="683.0" AnchorPane.topAnchor="462.0" />
+            <Button fx:id="snap" layoutX="93.0" layoutY="463.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="93.0" text="Send Snap" AnchorPane.bottomAnchor="141.0" AnchorPane.leftAnchor="93.0" AnchorPane.rightAnchor="709.0" AnchorPane.topAnchor="463.0">
                <font>
                   <Font size="10.0" />
                </font>
             </Button>
-            <Button fx:id="video" layoutX="283.0" layoutY="455.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="84.0" text="Send Video">
+            <Button fx:id="video" layoutX="10.0" layoutY="568.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="77.0" text="Send Video">
                <font>
                   <Font size="10.0" />
                </font>
             </Button>
-            <Button fx:id="p2p" layoutX="455.0" layoutY="455.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="84.0" text="Video Chat">
+            <Button fx:id="p2p" layoutX="93.0" layoutY="568.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="93.0" text="Video Chat">
                <font>
                   <Font size="10.0" />
                </font>
             </Button>
-            <Label layoutX="51.0" layoutY="16.0" text="All Chats">
+            <Label layoutX="64.0" layoutY="16.0" text="All Chats">
                <font>
                   <Font size="17.0" />
                </font>
             </Label>
-            <Button fx:id="view_pic" layoutX="88.0" layoutY="455.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="84.0" text="View Snap">
+            <Button fx:id="view_pic" layoutX="10.0" layoutY="515.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="77.0" text="View Snap">
                <font>
                   <Font size="10.0" />
                </font>
             </Button>
-            <Button fx:id="view_video" layoutX="-1.0" layoutY="455.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="77.0" text="View Video">
+            <Button fx:id="view_video" layoutX="10.0" layoutY="463.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="77.0" text="View Video">
                <font>
                   <Font size="10.0" />
                </font>
             </Button>
-            <Button fx:id="webcam" layoutX="373.0" layoutY="455.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="70.0" text="Webcam">
+            <Button fx:id="webcam" layoutX="93.0" layoutY="515.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="93.0" text="Webcam" AnchorPane.bottomAnchor="89.0" AnchorPane.leftAnchor="93.0" AnchorPane.rightAnchor="709.0" AnchorPane.topAnchor="515.0">
                <font>
                   <Font size="10.0" />
                </font>
             </Button>
+            <WebView fx:id="chatBox" depthTest="ENABLE" layoutX="223.0" layoutY="63.0" prefHeight="387.0" prefWidth="623.0" />
+            <Button fx:id="friendButton" layoutX="605.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="87.0" text="Friends" />
+            <Button fx:id="recButton" layoutX="700.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="103.0" text="Add Friends" />
+            <Button fx:id="rand" layoutX="810.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="78.0" text="Random" />
+            <Label fx:id="isTyping" layoutX="396.0" layoutY="16.0" text="......is typing" visible="false">
+               <font>
+                  <Font name="System Italic" size="14.0" />
+               </font>
+            </Label>
+            <Button fx:id="sendButton" layoutX="848.0" layoutY="539.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="44.0" style="-fx-background-color: #00CC99;" text="⏎" textOverrun="CLIP" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="848.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="539.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <HTMLEditor fx:id="sendMsg" htmlText="" layoutX="222.0" layoutY="462.0" prefHeight="147.0" prefWidth="526.0" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="222.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="462.0" />
          </children>
       </AnchorPane>
    </children>

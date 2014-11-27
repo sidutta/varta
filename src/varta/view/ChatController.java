@@ -18,6 +18,8 @@ import java.util.TimerTask;
 import multimedia.WebcamViewerExample;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -25,6 +27,8 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
@@ -32,9 +36,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import varta.Client;
 import multimedia.*;
+import multimedia.agent.StreamServer;
 
 
 
@@ -56,16 +64,28 @@ public class ChatController {
 	private TextField receiverId;
 
 	@FXML
-	private TextArea sendMsg;
+	private HTMLEditor sendMsg;
 
 	@FXML
-	private TextArea chatBox;
+	private WebView chatBox;
 
 	@FXML
 	private AnchorPane friends;
 	
 	@FXML
 	private Slider timeToLive;
+	
+	@FXML
+	private ContextMenu friendMenu =new ContextMenu();;
+	
+	@FXML
+	private Button recButton;
+	
+	@FXML
+	private Button rand;
+
+	@FXML
+	private Button friendButton;
 	
 	@FXML
 	public HashMap<String,javafx.scene.control.Button>  recToButton = new HashMap<String,javafx.scene.control.Button>();
@@ -75,6 +95,9 @@ public class ChatController {
 	
 	@FXML
 	public Button p2p;
+	
+	@FXML
+	public Label isTyping;
 	
 	@FXML
 	public Button video;
@@ -91,20 +114,85 @@ public class ChatController {
 	
 	private Timer timer = new Timer();
 
-	private String tempsender ="";
+	
+	private static int flag_ist = 0;
+	public static String ip = "localhost";
+        public static Integer port = 20000;
+	private String friendMessage;
+	private ArrayList <javafx.scene.control.MenuItem> friendList = friendList = new ArrayList<javafx.scene.control.MenuItem>();;
 	
 	public ChatController() {
 	}
 
-	
+	public void setReceiver(String receiver)
+	{
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+		receiverId.setText(receiver);
+			}
+		}
+		);
+	}
+	public void prepareFriends(String friendMessage, String prefix, boolean reinit)
+	{
+		this.friendMessage = friendMessage;
+		System.out.println("Entered Prepfrns1");
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				friendMenu = new ContextMenu();
+				System.out.println("Entered Prepfrns");
+			String [] friendarr = friendMessage.split(":");
+			
+			if(reinit)
+			{
+				friendList = new ArrayList<javafx.scene.control.MenuItem>();
+				for (int i = 0; i < friendarr.length; i++) { 
+				
+		
+					friendList.add (
+							new javafx.scene.control.MenuItem());
+					//friendarr[i]
+				}
+		}
+			for (int i = 0; i < friendList.size(); i++) {
+	    		
+	    		javafx.scene.control.MenuItem curr = friendList.get(i);
+	    		System.out.println("Iteration"+i+","+curr.getText());
+	    		if(friendarr[i].startsWith(prefix))
+	    	{
+	     //receiverId.setMinWidth(receiverId.getPrefWidth());
+	     //receiverId.setMaxWidth(receiverId.getPrefWidth());
+	    	System.out.println("inner Iteration"+i+","+curr.getText()+","+prefix);
+	    	Label lbl = new Label(friendarr[i]);
+	    	lbl.setId(friendarr[i]);
+	    	lbl.setMaxWidth(receiverId.getPrefWidth());
+	    	lbl.setPrefWidth(receiverId.getPrefWidth());
+	    	//lbl.setWrapText(true);
+	    	curr.setGraphic(lbl);
+	    	
+	    	friendMenu.getItems().add(curr);		// null prefix is prefix for all
+	    	curr.setOnAction((event)-> {
+	    	System.out.println(curr.getGraphic().getId());
+	    	receiverId.setText(curr.getGraphic().getId() );
+	    	
+			});
+			}
+	    	}
+			}
+		});		
+	}
+
 	@FXML
 	private void initialize() {
 
 		System.out.println("Entered initialize");
 		System.out.println(LoginController.client.getUsername());
 		LoginController.client.setController(this);
-    	chatBox.setEditable(false);
     	//Aditya N Detec if the sender is typing
+		LoginController.client.connMessage(8, LoginController.client.getUsername(),
+    			"Server","Friends plis");
     	sendMsg.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
              @Override
              public void handle(KeyEvent event) {
@@ -115,11 +203,53 @@ public class ChatController {
              }
          });
 
+    	receiverId.setContextMenu(friendMenu);
+    	//friendMenu.setWidth(receiverId.getWidth());
+    	
+    	receiverId.setOnKeyReleased ((event) -> {
+    		System.out.println("Prefix is "+receiverId.getText());
+    		prepareFriends(friendMessage, receiverId.getText(), false);
+    	});
+    	
 
+    	friendButton.setOnAction((event) -> {
+        friendMenu.show
+        (receiverId,
+        receiverId.getScene().getX() + receiverId.getScene().getWindow().getX() + receiverId.getLayoutX() ,
+        receiverId.getScene().getY() + receiverId.getScene().getWindow().getY() + receiverId.getLayoutY()
+         + receiverId.getHeight());
+    });
+    	    
+    	webcam.setOnAction((event) -> {
+        
+        LoginController.client.connMessage(13,LoginController.client.getUsername(),"server",ip+":"+port.toString());
+        new Thread(new StreamServer()).start();
+        });
+        
+    	recButton.setOnAction((event) -> {
+			System.out.println("recButton Pressed");
+			String reciever=receiverId.getText();
+			String sender = LoginController.client.getUsername();
+			LoginController.client.connMessage(3,"Server",
+					reciever,sender+" added "+reciever+" to friend list just now");
+			System.out.println("Added to friendList");
+			LoginController.client.connMessage(8,LoginController.client.getUsername(),
+	    			"Server","Friends plis");
+			
+		});
+                
+                p2p.setOnAction((event) -> {
+                LoginController.client.connMessage(15,LoginController.client.getUsername(),
+	    			receiverId.getText(),"random");
+                
+                });
+                
 		sendButton.setOnAction((event) -> {
 
 			String recId=receiverId.getText();
-			String msgText=sendMsg.getText();
+			String msgText=sendMsg.getHtmlText();
+			msgText = msgText.replace("<p>", "");
+			msgText = msgText.replace("</p>", "");
 			if(!recId.equals("") && !msgText.equals(""))
 			{
 				System.out.println("Sending ...");
@@ -142,7 +272,7 @@ public class ChatController {
 					LoginController.client.allChats.put(recId,temp1);
 				}
 				
-				chatBox.setText("");
+	
 //            	System.out.println("Mihir maxxx");
 //            	for(int i=0; i<LoginController.client.allChats.get(sender).size(); i++){
 //	            	   System.out.println(LoginController.client.allChats.get(sender).get(i).getMessage());
@@ -151,29 +281,36 @@ public class ChatController {
 //	               }
 //				System.out.println("------");
 								
-
+				String page = "";
                for(int i=0; i<LoginController.client.allChats.get(recId).size(); i++){
             	   Packet temp2 = LoginController.client.allChats.get(recId).get(i);
             	   
+            	  
             	   if(temp2.getType() == 4){
-            		   printMessage("Me",temp2.getMessage());
+            		  page = page + "Me: "+temp2.getMessage();
+            		  page = page + "<br>";
 
             	   }
             	   else if( temp2.getType() ==1 ){
+            		   page = page + temp2.getSender()+": "+temp2.getMessage();
+             		   page = page + "<br>";
 
-            		   printMessage(temp2.getSender(),temp2.getMessage());
             	   }
             	   else if(temp2.getType() == 6){
-            		   printMessage(null,"---"+temp2.getMessage()+"--- \n");
+            		   page = page + "---"+temp2.getMessage()+"--- ";
+             		   page = page + "<br>";
+
             	   }
+            	   
+            	   System.out.println(temp2.getMessage());
             			   
                }
-            
-				recToButton.get(recId).setStyle("-fx-background-color:#E0E0E0");;
-
+               printMessage(page);
+				//recToButton.get(recId).setStyle("-fx-background-color:#E0E0E0");;
+				makeColor(recId,"#E0E0E0");
 
 				//chatBox.appendText("Me: "+msgText+"\n");
-				sendMsg.setText("");
+				sendMsg.setHtmlText("");
 			
 			}
 			
@@ -198,7 +335,11 @@ public class ChatController {
 					
 		});
 		
-		
+		rand.setOnAction((event) -> {
+			System.out.println("Sending random \n");
+			LoginController.client.connMessage(16,LoginController.client.getUsername(),"Server","random");
+			
+		});
 
 		view_pic.setOnAction((event) -> {
 			while(LoginController.client.SnapQ.containsKey(receiverId.getText()) || LoginController.client.SnapQ.get(receiverId.getText()).size() != 0 ){
@@ -223,6 +364,10 @@ public class ChatController {
 			}
 		});
 	}
+	
+	
+	
+	
 	//Aditya => Used by tasker
 	class SayHello extends TimerTask {
 		
@@ -233,6 +378,39 @@ public class ChatController {
 	
 
 	 }
+	
+	public void refresh(String str){
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				
+				String page = "";
+	               for(int i=0; i<LoginController.client.allChats.get(str).size(); i++){
+	            	   Packet temp2 = LoginController.client.allChats.get(str).get(i);
+	            	   
+	            	  
+	            	   if(temp2.getType() == 4){
+	            		  page = page + "Me: "+temp2.getMessage();
+	            		  page = page + "<br>";
+
+	            	   }
+	            	   else if( temp2.getType() ==1 ){
+	            		   page = page + temp2.getSender()+": "+temp2.getMessage();
+		            	   page = page + "<br>";
+
+	            	   }
+	            	   else if(temp2.getType() == 6){
+	            		   page = page + "---"+temp2.getMessage()+"--- ";
+		            	   page = page + "<br>";
+	            	   }
+	            	   
+	            	   System.out.println(temp2.getMessage());
+	            			   
+	               }
+	               printMessage(page);
+	             }
+		});
+	}
 	//Aditya N => Restore the id back from ..typing to normal
 	@FXML
 	public void setup(){
@@ -240,8 +418,9 @@ public class ChatController {
 			@Override
 			public void run() {
 				
-			    receiverId.setText(tempsender);   	      
-			}
+				isTyping.setVisible(false);
+				flag_ist = 0;
+				}
 		});
 	}
 	
@@ -263,12 +442,12 @@ public class ChatController {
 		Platform.runLater(new Runnable() {
 			@Override 
 			public void run() {
+				
 				System.out.println("yoyo "+sender+" "+LoginController.client.getUsername() );
-				if( receiverId.getText().equals(sender)){
+				if( receiverId.getText().equals(sender) && flag_ist ==0){
 					System.out.println("comeon");
-					receiverId.setText(sender+"....is typing");
-					receiverId.setStyle( "-fx-font-style: italic;");
-					tempsender=sender;
+					isTyping.setVisible(true);
+					flag_ist = 1;
 					timer.schedule(new SayHello(), 2500);
 					
 					
@@ -284,15 +463,13 @@ public class ChatController {
 	public String getRec(){
 		return receiverId.getText();
 	}
-	public void printMessage(String sender, String message)
+	
+	public void printMessage(String message)
 	{
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				if(sender!=null)
-				chatBox.appendText(sender+": "+message+"\n");    
-				else
-				chatBox.appendText(message);    
+				chatBox.getEngine().loadContent(message);  
 
 			}
 		});
@@ -369,7 +546,7 @@ public class ChatController {
 		            public void handle(ActionEvent event) {
 						System.out.println("Its Wokring");
 						System.out.println(event);
-		            	chatBox.setText("");
+//		            	chatBox.setText("");
 //		            	System.out.println("Mihir maxxx");
 //		            	for(int i=0; i<LoginController.client.allChats.get(sender).size(); i++){
 //			            	   System.out.println(LoginController.client.allChats.get(sender).get(i).getMessage());
@@ -381,23 +558,25 @@ public class ChatController {
 						receiverId.setText(sender);
 						tp.setStyle("-fx-background-color:#E0E0E0");;
 					if(LoginController.client.allChats.containsKey(sender)){
-			               for(int i=0; i<LoginController.client.allChats.get(sender).size(); i++){
-			            	   Packet temp = LoginController.client.allChats.get(sender).get(i);
-			            	   
-			            	   if(temp.getType() == 4){
-			            		   printMessage("Me",temp.getMessage());
-	
-			            	   }
-			            	   else if( temp.getType() ==1 ){
-	
-			            		   printMessage(temp.getSender(),temp.getMessage());
-			            	   }
-			            	   else if(temp.getType() == 6){
-			            		   printMessage(null,"---"+temp.getMessage()+"--- \n");
-			            	   }
-			            			   
-			               }
+//						String page = "";
+//			               for(int i=0; i<LoginController.client.allChats.get(sender).size(); i++){
+//			            	   Packet temp2 = LoginController.client.allChats.get(sender).get(i);
+//			            	   
+//			            	   if(temp2.getType() == 4){
+//			            		  page = page + "Me:"+temp2.getMessage();
+//
+//			            	   }
+//			            	   else if( temp2.getType() ==1 ){
+//			            		   page = page + temp2.getSender()+":"+temp2.getMessage();
+//			            	   }
+//			            	   else if(temp2.getType() == 6){
+//			            		   page = page + "---"+temp2.getMessage()+"--- \n";
+//			            	   }
+//			            			   
+//			               }
+//			               printMessage(page);
 			            }
+						refresh(sender);
 					}
 					
 					
@@ -413,6 +592,21 @@ public class ChatController {
 				}
 		});
 		
+	}
+	
+	public void MoveTimerBySegment()
+	{
+	System.out.println("Sliiiiiide");
+	}
+
+	public void SlideTimer()
+	{
+		Timeline timeline = new Timeline(new KeyFrame(
+		        Duration.millis(2500),
+		        ae -> MoveTimerBySegment()
+		        ));
+		timeline.setCycleCount(3);
+		timeline.play();
 	}
 
 

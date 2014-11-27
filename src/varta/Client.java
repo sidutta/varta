@@ -10,6 +10,7 @@ import varta.view.ChatController;
 import varta.view.LoginController;
 import varta.view.SignupController;
 import javafx.scene.control.Button;
+import multimedia.agent.StreamClient;
 
 
 public class Client extends Panel implements Runnable {
@@ -101,6 +102,7 @@ public class Client extends Panel implements Runnable {
 	//Aditya N => Continous packets sent to tell teh receiver i'm typing
 	public void isTyping( String sender, String receiver ) {
 		try {
+			System.out.println("is typing msgs");
 			dout.writeObject( new Packet(5, sender, receiver, null) );
 			dout.flush();
 			//displayta.append("Me: " + message + "\n");
@@ -218,21 +220,57 @@ public class Client extends Panel implements Runnable {
 
 						
 					}
+                                        else if(packet.getType() == 15){
+                                            
+                                            if(!packet.getMessage().equals("Webcam Not Found") ){
+                                                new Thread(new StreamClient(packet.getMessage())).start();
+                                            }
+                                        }
+					else if(packet.getType() == 16){
+						System.out.println("No one online");
+					}
 					else{
 						while(true)
 						{
 							System.out.println("Initialized"+ chatController);
 							if(chatController!=null)
-							{
+							{   
 								break;
 							}	
 						}
+						if (packet.getType()==8)
+						{
+							System.out.println("Type 8 in client");
+							
+							String [] pktData = packet.getMessage().split("\\|");
+							if(pktData.length > 1)
+								chatController.prepareFriends(pktData[1],"",true);
+							else
+								chatController.prepareFriends(":","",true);
+						}
+//						else 
+//						{
+//							if (packet.getType()==16)
+//						
+//						{
+//							System.out.println("Type 16 in client");
+//							String newReceiver = packet.getMessage().split("\\|")[0];
+//							packet.setMessage(packet.getMessage().replace("|", ""));
+//							System.out.println(packet.getMessage());
+//							if(!newReceiver.equals(null))
+//								chatController.setReceiver(newReceiver);
+//						
+//						}	
+//							chatController.printMessage(packet.getSender(),packet.getMessage());
+//						}
 						if(packet.getType() == 5){
 							chatController.printIsTyping(packet.getSender());
 							
 						}
-						else{
+						else if(packet.getType() == 6  || packet.getType() == 1){
 							System.out.println(username+" got a message.");
+							
+
 							//Aditya N => Check if the reciver all ready has a tab for the incoming msg
 							if(!talkingTo.contains(packet.getSender())){
 								talkingTo.add(packet.getSender());
@@ -255,8 +293,9 @@ public class Client extends Panel implements Runnable {
 		
 							}
 							
-							if(chatController.getRec().equals(packet.getSender()) || chatController.getRec().equals(packet.getSender()+"....is typing")){
-								chatController.printMessage(packet.getSender(), packet.getMessage());;
+							if(chatController.getRec().equals(packet.getSender())){
+								//chatController.printMessage(packet.getSender(), packet.getMessage());;
+								chatController.refresh(packet.getSender());
 								chatController.makeColor(packet.getSender(),"#E0E0E0");
 
 							}

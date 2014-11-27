@@ -31,6 +31,7 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import varta.RandomStringGenerator;
@@ -81,7 +82,7 @@ public class Encoder extends JFrame implements ActionListener, Runnable  {
 			e1.printStackTrace();
 		}
 
-        file = new File("/Users/aditya/Downloads/"+rand_str+".mp4");
+        file = new File("E:\\Varta_media\\"+rand_str+".mp4");
         writer = ToolFactory.makeWriter(file.getAbsolutePath());
         Dimension size = WebcamResolution.VGA.getSize();
         writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_MPEG4, size.width, size.height);
@@ -90,12 +91,12 @@ public class Encoder extends JFrame implements ActionListener, Runnable  {
         webcam.open(true);
         
         JPanel controls = new JPanel(new BorderLayout());
-        JButton send;
-        send = new JButton("send");
-        send.setVerticalTextPosition(AbstractButton.CENTER);
-        send.setHorizontalTextPosition(AbstractButton.CENTER);
-        send.setActionCommand("send");
-        send.addActionListener(this);
+        JLabel send = new JLabel();
+//        send = new JButton("send");
+//        send.setVerticalTextPosition(AbstractButton.CENTER);
+//        send.setHorizontalTextPosition(AbstractButton.CENTER);
+//        send.setActionCommand("send");
+//        send.addActionListener(this);
         controls.add(send);
  
 
@@ -112,17 +113,19 @@ public class Encoder extends JFrame implements ActionListener, Runnable  {
         pack();
         setVisible(true);
         
+        send.setText("Recording will begin in 3 seconds.");
+        
         Thread thisThread = Thread.currentThread();
          try {
-             thisThread.sleep(5000);
+             thisThread.sleep(3000);
          }
          catch (Throwable t)
              {
              throw new OutOfMemoryError("An Error has occured");
          }
-        
+        send.setText("Recording...");
         long start = System.currentTimeMillis();
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 20; i++) {
             System.out.println("Capture frame " + i);
             BufferedImage image = ConverterFactory.convertToType(webcam.getImage(), BufferedImage.TYPE_3BYTE_BGR);
             IConverter converter = ConverterFactory.createConverter(image, IPixelFormat.Type.YUV420P);
@@ -137,8 +140,8 @@ public class Encoder extends JFrame implements ActionListener, Runnable  {
                 Logger.getLogger(Encoder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-                LoginController.client.connMessage(11,LoginController.client.getUsername(),LoginController.client.getChatController().getRec(),rand_str);
-
+        LoginController.client.connMessage(11,LoginController.client.getUsername(),LoginController.client.getChatController().getRec(),rand_str);
+        send.setText("Message sent");
         writer.close();
         System.out.println("Video recorded in file: " + file.getAbsolutePath()); 
 		

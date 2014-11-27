@@ -41,7 +41,7 @@ public class LoadImage extends JFrame {
     	Stage chatStage=new Stage();
     	StackPane sp = new StackPane();
     	System.out.println(str);
-        Image img = new Image("file:///Users/aditya/Documents/NetBeansProjects/NetBeansProjects/PlayWithImages/src/"+str+".png");
+        Image img = new Image("file:///Users/Siddhartha/NetBeansProjects/"+str+".png");
         ImageView imgView = new ImageView(img);
         sp.getChildren().add(imgView);
         Scene scene = new Scene(sp);

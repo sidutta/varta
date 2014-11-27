@@ -109,7 +109,7 @@ public class WebcamViewerExample extends JFrame implements ActionListener, Runna
     					// TODO Auto-generated catch block
     					e1.printStackTrace();
     				}
-                    ImageIO.write(webcam.getImage(), "PNG", new File("/Users/aditya/Documents/NetBeansProjects/NetBeansProjects/PlayWithImages/src/"+rand_str+".png"));
+                    ImageIO.write(webcam.getImage(), "PNG", new File("/Users/Siddhartha/NetBeansProjects/"+rand_str+".png"));
                     LoginController.client.connMessage(10,LoginController.client.getUsername(),LoginController.client.getChatController().getRec(),rand_str);
                 }
             } catch (IOException ex) {

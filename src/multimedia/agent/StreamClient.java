@@ -18,7 +18,7 @@ import com.xuggle.xuggler.IAudioSamples;
 import multimedia.agent.ui.SingleVideoDisplayWindow;
 import multimedia.handler.StreamFrameListener;
 
-public class StreamClient {
+public class StreamClient implements Runnable {
 
     /**
      * @author kerr
@@ -29,15 +29,28 @@ public class StreamClient {
     private final static Dimension dimension = new Dimension(320, 240);
     private final static SingleVideoDisplayWindow displayWindow = new SingleVideoDisplayWindow("Stream example", dimension);
     protected final static Logger logger = LoggerFactory.getLogger(StreamClient.class);
+    
+    private String ip = null;
+    private int port = 0;
 
     public static void main(String[] args) {
+        
+    }
+    public StreamClient(String message) {
+        String[] connInfo = message.split(":");
+        ip = connInfo[0];
+        port = Integer.parseInt(connInfo[1]);
+     }
+
+    @Override
+    public void run() {
         //setup the videoWindow
         displayWindow.setVisible(true);
 
         //setup the connection
         logger.info("setup dimension :{}", dimension);
         StreamClientAgent clientAgent = new StreamClientAgent(new StreamFrameListenerIMPL(), dimension);
-        clientAgent.connect(new InetSocketAddress("localhost", 20000));
+        clientAgent.connect(new InetSocketAddress(ip, port));
         try {
             openJavaSound();
         } catch (LineUnavailableException e) {

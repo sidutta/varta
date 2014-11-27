@@ -42,7 +42,7 @@ public class EmbeddedMediaPlayer extends JFrame {
     	Group root = new Group();
       Dimension size = WebcamResolution.VGA.getSize();
 
-        Media media = new Media("file:///Users/aditya/Downloads/"+str+".mp4");
+        Media media = new Media("file:///E:\\Varta_media\\"+str+".mp4");
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(true);
         MediaControl mediaControl = new MediaControl(mediaPlayer);
