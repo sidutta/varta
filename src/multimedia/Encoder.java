@@ -1,9 +1,5 @@
 package multimedia;
 
-/**
- *
- * @author Siddhartha
- */
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.github.sarxos.webcam.WebcamResolution;
@@ -37,115 +33,128 @@ import javax.swing.JPanel;
 import varta.RandomStringGenerator;
 import varta.view.LoginController;
 
-public class Encoder extends JFrame implements ActionListener, Runnable  {
+public class Encoder extends JFrame implements ActionListener, Runnable {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	Webcam webcam = null;
-    File file = null;
-    IMediaWriter writer = null;
-    
-    public  Encoder() {
-              
+	File file = null;
+	IMediaWriter writer = null;
 
-    }
-    
-    
-    
-    public static void main(String[] args) throws Throwable {
-        new Thread(new Encoder()).start();
-        
-    }
+	public Encoder() {
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if ("send".equals(e.getActionCommand())) {
-            if (webcam != null) {
-                writer.close();
-                System.out.println("Video recorded in file: " + file.getAbsolutePath());
-            }
-        } 
-    }
+	}
+
+	public static void main(String[] args) throws Throwable {
+		new Thread(new Encoder()).start();
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if ("send".equals(e.getActionCommand())) {
+			if (webcam != null) {
+				writer.close();
+				System.out.println("Video recorded in file: "
+						+ file.getAbsolutePath());
+			}
+		}
+	}
 
 	@Override
 	public void run() {
 		setTitle("Varta: Send Video Message");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-        String	rand_str="";
-    	try {
-			rand_str =RandomStringGenerator.generateRandomString(10,RandomStringGenerator.Mode.ALPHANUMERIC);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(new BorderLayout());
+		String rand_str = "";
+		try {
+			rand_str = RandomStringGenerator.generateRandomString(10,
+					RandomStringGenerator.Mode.ALPHANUMERIC);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
-        file = new File("E:\\Varta_media\\"+rand_str+".mp4");
-        writer = ToolFactory.makeWriter(file.getAbsolutePath());
-        Dimension size = WebcamResolution.VGA.getSize();
-        writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_MPEG4, size.width, size.height);
-        webcam = Webcam.getDefault();
-        webcam.setViewSize(size);
-        webcam.open(true);
-        
-        JPanel controls = new JPanel(new BorderLayout());
-        JLabel send = new JLabel();
-//        send = new JButton("send");
-//        send.setVerticalTextPosition(AbstractButton.CENTER);
-//        send.setHorizontalTextPosition(AbstractButton.CENTER);
-//        send.setActionCommand("send");
-//        send.addActionListener(this);
-        controls.add(send);
- 
+		file = new File("/Users/aditya/Downloads/" + rand_str + ".mp4");
+		writer = ToolFactory.makeWriter(file.getAbsolutePath());
+		Dimension size = WebcamResolution.VGA.getSize();
+		writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_MPEG4, size.width,
+				size.height);
+		webcam = Webcam.getDefault();
+		webcam.setViewSize(size);
+		webcam.open(true);
 
-        WebcamPanel panel = new WebcamPanel(webcam);
-        panel.setFPSDisplayed(true);
-        panel.setDisplayDebugInfo(false);
-        panel.setImageSizeDisplayed(true);
-        panel.setMirrored(true);
-        //JFrame window = new JFrame("Varta: Send Video Message");
-        add(panel, BorderLayout.CENTER);
-        add(controls, BorderLayout.SOUTH);
-        setResizable(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        setVisible(true);
-        
-        send.setText("Recording will begin in 3 seconds.");
-        
-        Thread thisThread = Thread.currentThread();
-         try {
-             thisThread.sleep(3000);
-         }
-         catch (Throwable t)
-             {
-             throw new OutOfMemoryError("An Error has occured");
-         }
-        send.setText("Recording...");
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 20; i++) {
-            System.out.println("Capture frame " + i);
-            BufferedImage image = ConverterFactory.convertToType(webcam.getImage(), BufferedImage.TYPE_3BYTE_BGR);
-            IConverter converter = ConverterFactory.createConverter(image, IPixelFormat.Type.YUV420P);
-            IVideoPicture frame = converter.toPicture(image, (System.currentTimeMillis() - start) * 1000);
-            frame.setKeyFrame(i == 0);
-            frame.setQuality(0);
-            writer.encodeVideo(0, frame);
-            try {
-                // 10 FPS
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Encoder.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        LoginController.client.connMessage(11,LoginController.client.getUsername(),LoginController.client.getChatController().getRec(),rand_str);
-        send.setText("Message sent");
-        writer.close();
-        System.out.println("Video recorded in file: " + file.getAbsolutePath()); 
-		
+		JPanel controls = new JPanel(new BorderLayout());
+		JLabel send = new JLabel();
+		// send = new JButton("send");
+		// send.setVerticalTextPosition(AbstractButton.CENTER);
+		// send.setHorizontalTextPosition(AbstractButton.CENTER);
+		// send.setActionCommand("send");
+		// send.addActionListener(this);
+		controls.add(send);
+
+		WebcamPanel panel = new WebcamPanel(webcam);
+		panel.setFPSDisplayed(true);
+		panel.setDisplayDebugInfo(false);
+		panel.setImageSizeDisplayed(true);
+		panel.setMirrored(true);
+		// JFrame window = new JFrame("Varta: Send Video Message");
+		add(panel, BorderLayout.CENTER);
+		add(controls, BorderLayout.SOUTH);
+		setResizable(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pack();
+		setVisible(true);
+
+		send.setText("Recording will begin in 3 seconds.");
+
+		Thread thisThread = Thread.currentThread();
+		try {
+			thisThread.sleep(3000);
+		} catch (Throwable t) {
+			throw new OutOfMemoryError("An Error has occured");
+		}
+		send.setText("Recording...");
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < 20; i++) {
+			System.out.println("Capture frame " + i);
+			BufferedImage image = ConverterFactory.convertToType(
+					webcam.getImage(), BufferedImage.TYPE_3BYTE_BGR);
+			IConverter converter = ConverterFactory.createConverter(image,
+					IPixelFormat.Type.YUV420P);
+			IVideoPicture frame = converter.toPicture(image,
+					(System.currentTimeMillis() - start) * 1000);
+			frame.setKeyFrame(i == 0);
+			frame.setQuality(0);
+			writer.encodeVideo(0, frame);
+			try {
+				// 10 FPS
+				Thread.sleep(100);
+			} catch (InterruptedException ex) {
+				Logger.getLogger(Encoder.class.getName()).log(Level.SEVERE,
+						null, ex);
+			}
+		}
+		LoginController.client.connMessage(11, LoginController.client
+				.getUsername(), LoginController.client.getChatController()
+				.getRec(), rand_str);
+		send.setText("Message sent");
+		writer.close();
+
+		webcam.close();
+		File lock = null;
+		lock = new File(System.getProperty("java.io.tmpdir"), getLockName());
+		lock.delete();
+		dispose();
+		System.out.println("Video recorded in file: " + file.getAbsolutePath());
+
 	}
 
-   
+	private String getLockName() {
+		return String.format(".webcam-lock-%d",
+				Math.abs(webcam.getName().hashCode()));
+	}
+
 }

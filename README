@@ -1,0 +1,26 @@
+CS 378 - Computer Networks Lab Project
+
+Title: Varta (a cross-platform Snapchat-like multi-threaded desktop app with options to take and transfer snaps, short videos and have a live A/V chat along with a GUI that enables stylized text editing, tab control for multiple chats, broadcast messages, friend lists and more)
+
+Resources:
+The project was based on Java 8 with JavaFX used for GUI. For webcam and streaming related stuff, the following external libraries were made use of:
+a) Xuggle(encode, decode audio-video): http://www.xuggle.com/ and https://code.google.com/p/xuggle/
+b) JBoss Netty(for the networking part): http://netty.io/	
+c) Thumbnailator: code.google.com/p/thumbnailator/
+d) webcam-capture(as the name suggests, for webcam-related part): http://webcam-capture.sarxos.pl (several interesting code samples here)
+
+OpenIMAJ(http://www.openimaj.org) is a set of machine-learning libraries with features such as face recognition etc and can be suitably explored.
+
+Alternate approaches for the video streaming part could be to start a project in Adobe Flex with ActionScript3 for GUI. Flv videos can be created. A media server like Red5(www.red5.org) or Wowza(www.wowza.com) will be required for streaming. Note that as of now its difficult to integrate swf files(executables from flex) with java. Interesting code snippets for the same are available at https://code.google.com/p/red5.
+
+Our live video chat was P2P. 
+
+Our project has two packages:
+a) multimedia and its subpackages deals with A/V related stuff
+b) varta and its subpackages deals with all the remaining chat functionalities
+
+Team Members:
+Siddhartha Dutta(120040005)
+Shivam Garg(12D020036)
+Aditya Nambiar(12D070012)
+Mihir Kulkarni(12D020007)

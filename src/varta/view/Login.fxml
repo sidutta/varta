@@ -11,7 +11,7 @@
    <children>
       <AnchorPane layoutY="7.0" prefHeight="281.0" prefWidth="431.0" AnchorPane.leftAnchor="0.0">
          <children>
-            <TextField fx:id="password" layoutX="151.0" layoutY="101.0" />
+            <PasswordField fx:id="password" layoutX="151.0" layoutY="101.0" />
             <Label layoutX="70.0" layoutY="65.0" text="User Name" />
             <Button fx:id="loginButton" layoutX="219.0" layoutY="141.0" mnemonicParsing="false" text="Go!" />
             <TextField fx:id="userid" layoutX="151.0" layoutY="60.0" />

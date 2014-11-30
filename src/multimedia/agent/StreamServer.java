@@ -7,57 +7,60 @@ import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import javax.swing.JFrame;
 import varta.view.ChatController;
+import varta.MainApp;
 
-public class StreamServer  implements Runnable {
-    
-    public StreamServer() {
-        
-    }
+public class StreamServer implements Runnable {
 
-    public static void main(String[] args) {
-        Webcam.setAutoOpenMode(true);
-        Webcam webcam = Webcam.getDefault();
-        Dimension dimension = new Dimension(320, 240);
-        webcam.setViewSize(dimension);
-//webcam.open();
-        WebcamPanel panel = new WebcamPanel(webcam);
-        panel.setFPSDisplayed(true);
-        panel.setDisplayDebugInfo(false);
-        panel.setImageSizeDisplayed(true);
-        panel.setMirrored(true);
-        JFrame window = new JFrame("Varta: My Webcam");
-        window.add(panel);
-        window.setResizable(true);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.pack();
-        window.setVisible(true);
+	public StreamServer() {
 
-        StreamServerAgent serverAgent = new StreamServerAgent(webcam, dimension);
-        serverAgent.start(new InetSocketAddress("localhost", 20000));
-    }
+	}
 
-    @Override
-    public void run() {
-        Webcam.setAutoOpenMode(true);
-        Webcam webcam = Webcam.getDefault();
-        Dimension dimension = new Dimension(320, 240);
-        webcam.setViewSize(dimension);
-//webcam.open();
-        WebcamPanel panel = new WebcamPanel(webcam);
-        panel.setFPSDisplayed(true);
-        panel.setDisplayDebugInfo(false);
-        panel.setImageSizeDisplayed(true);
-        panel.setMirrored(true);
-        JFrame window = new JFrame("Varta: My Webcam");
-        window.add(panel);
-        window.setResizable(true);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.pack();
-        window.setVisible(true);
+	public static void main(String[] args) {
+		Webcam.setAutoOpenMode(true);
+		Webcam webcam = Webcam.getDefault();
+		Dimension dimension = new Dimension(320, 240);
+		webcam.setViewSize(dimension);
+		// webcam.open();
+		WebcamPanel panel = new WebcamPanel(webcam);
+		panel.setFPSDisplayed(true);
+		panel.setDisplayDebugInfo(false);
+		panel.setImageSizeDisplayed(true);
+		panel.setMirrored(true);
+		JFrame window = new JFrame("Varta: My Webcam");
+		window.add(panel);
+		window.setResizable(true);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.pack();
+		window.setVisible(true);
 
-        StreamServerAgent serverAgent = new StreamServerAgent(webcam, dimension);
-        serverAgent.start(new InetSocketAddress(ChatController.ip, ChatController.port));
+		StreamServerAgent serverAgent = new StreamServerAgent(webcam, dimension);
+		System.out.println("Stream app ip is " + MainApp.stream_server);
+		serverAgent.start(new InetSocketAddress(MainApp.stream_server, 20000));
+	}
 
-    }
+	@Override
+	public void run() {
+		Webcam.setAutoOpenMode(true);
+		Webcam webcam = Webcam.getDefault();
+		Dimension dimension = new Dimension(320, 240);
+		webcam.setViewSize(dimension);
+		// webcam.open();
+		WebcamPanel panel = new WebcamPanel(webcam);
+		panel.setFPSDisplayed(true);
+		panel.setDisplayDebugInfo(false);
+		panel.setImageSizeDisplayed(true);
+		panel.setMirrored(true);
+		JFrame window = new JFrame("Varta: My Webcam");
+		window.add(panel);
+		window.setResizable(true);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.pack();
+		window.setVisible(true);
+
+		StreamServerAgent serverAgent = new StreamServerAgent(webcam, dimension);
+		serverAgent.start(new InetSocketAddress(ChatController.ip,
+				ChatController.port));
+
+	}
 
 }

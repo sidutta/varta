@@ -1,69 +1,113 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package multimedia;
 
-/**
- *
- *
- */
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.github.sarxos.webcam.WebcamResolution;
+
 import varta.view.LoginController;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Dimension2D;
+import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class LoadImage extends JFrame {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-    	System.out.println("Called main of loadimage");
-        Application.launch(args);
-    }
-    
-    String rand_str = null;
-    
-   public LoadImage(String str) {
-    	System.out.println("Called main of loadimage");
-    	setTitle("Varta Snap");
-    	setLayout(new BorderLayout());
-    	Stage chatStage=new Stage();
-    	StackPane sp = new StackPane();
-    	System.out.println(str);
-        Image img = new Image("file:///Users/Siddhartha/NetBeansProjects/"+str+".png");
-        ImageView imgView = new ImageView(img);
-        sp.getChildren().add(imgView);
-        Scene scene = new Scene(sp);
+	/**
+	 * @param args
+	 *            the command line arguments
+	 */
+	Stage chatStage;
+	ProgressBar pb;
+	ProgressIndicator pins;
 
-        chatStage.setScene(scene);
-        chatStage.show();
-        
-      	rand_str = str;
-    }
+	public static void main(String[] args) {
+		System.out.println("Called main of loadimage");
+		Application.launch(args);
+	}
 
-//    @Override
-//    public void start(Stage primaryStage) {
-//        primaryStage.setTitle("Varta Snap");
-//
-//        StackPane sp = new StackPane();
-//        Image img = new Image("/Users/aditya/Documents/NetBeansProjects/NetBeansProjects/PlayWithImages/src/"+LoginController.client.imp+".png");
-//        ImageView imgView = new ImageView(img);
-//        sp.getChildren().add(imgView);
-//
-//        //Adding HBox to the scene
-//        Scene scene = new Scene(sp);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//    }
+	public void setProgress(double prog) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+
+				pb.setProgress(prog);
+				pins.setProgress(prog);
+				System.out.println("setting progress");
+			}
+		});
+
+	}
+
+	String rand_str = null;
+
+	public ProgressBar setNewStage(String str) {
+
+		final Float value = 0.0f;
+		final Label label = new Label();
+		final ProgressBar pbs = new ProgressBar();
+		pbs.setTranslateX(400);
+		pbs.setScaleX(4);
+		final ProgressIndicator pin = new ProgressIndicator();
+		final HBox hbs[] = new HBox[2];
+		chatStage = new Stage();
+		System.out.println("Shiii " + chatStage);
+		Group root = new Group();
+		Dimension size = WebcamResolution.VGA.getSize();
+		Scene scene = new Scene(root, size.getWidth(), size.getHeight() + 12);
+
+		chatStage.setScene(scene);
+		chatStage.setTitle("Image");
+
+		// label.setText("progress:" + value);
+
+		pbs.setProgress(value);
+
+		// pin.setProgress(value);
+		hbs[0] = new HBox();
+		hbs[0].setSpacing(1);
+
+		hbs[0].getChildren().addAll(pbs);
+
+		hbs[1] = new HBox();
+		hbs[1].setSpacing(1);
+		Image img = new Image("file:///Users/aditya/Downloads/" + str + ".png");
+		System.out.println("http:///10.2.10.34:5080/demos/" + str + ".png");
+		ImageView imgView = new ImageView(img);
+		hbs[1].getChildren().add(imgView);
+		final VBox vb = new VBox(100);
+
+		vb.getChildren().addAll(hbs);
+		scene.setRoot(vb);
+		chatStage.show();
+		return pbs;
+	}
+
+	public LoadImage(String str) {
+		System.out.println("Called main of loadimage");
+		pb = setNewStage(str);
+
+		rand_str = str;
+	}
+
+	public void CloseImage() {
+		chatStage.close();
+	}
+
+	public ProgressBar getProg() {
+		return pb;
+	}
 }

@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -16,124 +17,131 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import varta.Client;
+import varta.MainApp;
 
 public class LoginController {
 
-    @FXML
-    private Button loginButton;
+	@FXML
+	private Button loginButton;
 
-    @FXML
-    private TextField userid;
+	@FXML
+	private TextField userid;
 
-    @FXML
-    private TextField password;
+	@FXML
+	private PasswordField password;
 
-    @FXML
-    private Label invalid;
+	@FXML
+	private Label invalid;
 
-    @FXML
-    private Button signup;
+	@FXML
+	private Button signup;
 
-    public static Client client;
+	public static Client client;
 
-    public LoginController() {
-    }
+	public LoginController() {
+	}
 
-    @FXML
-    private void initialize() {
+	@FXML
+	private void initialize() {
 
-        loginButton.setOnAction((event) -> {
-            String username = userid.getText();
-            String passwd = password.getText();
-            System.out.println(username);
-            System.out.println(passwd);
-            client = new Client("localhost", username, 5002);
-            //Sh:Set the login controller object for the client
-            client.setLoginController(this);
-            System.out.println("Login controller set");
+		loginButton.setOnAction((event) -> {
+			String username = userid.getText();
+			String passwd = password.getText();
+			System.out.println(username);
+			System.out.println(passwd);
+			System.out.println("Server is at " + MainApp.our_server);
+			client = new Client(MainApp.our_server, username, 5002);
+			// Sh:Set the login controller object for the client
+				client.setLoginController(this);
+				System.out.println("Login controller set");
 
-//	        try {
-            client.connMessage(0, LoginController.client.getUsername(), null, passwd);
-//	        	Stage loginStage = (Stage) loginButton.getScene().getWindow();	        	
-//	        	Stage chatStage=new Stage();
-//	        	chatStage.setTitle("Varta. Welcome "+client.getUsername()+".");
-//	            FXMLLoader loader = new FXMLLoader();
-//	            loader.setLocation(getClass().getResource("ChatWindow.fxml"));
-//	            AnchorPane chatpage = (AnchorPane) loader.load();
-//	            Scene scene = new Scene(chatpage);
-//	            chatStage.setScene(scene);
-//	            loginStage.close();
-//	            chatStage.show();
+				// try {
+				client.connMessage(0, LoginController.client.getUsername(),
+						null, passwd);
+				// Stage loginStage = (Stage)
+				// loginButton.getScene().getWindow();
+				// Stage chatStage=new Stage();
+				// chatStage.setTitle("Varta. Welcome "+client.getUsername()+".");
+				// FXMLLoader loader = new FXMLLoader();
+				// loader.setLocation(getClass().getResource("ChatWindow.fxml"));
+				// AnchorPane chatpage = (AnchorPane) loader.load();
+				// Scene scene = new Scene(chatpage);
+				// chatStage.setScene(scene);
+				// loginStage.close();
+				// chatStage.show();
 
-//	        } catch (IOException e) {
-//	            e.printStackTrace();
-//	        }
-        });
+				// } catch (IOException e) {
+				// e.printStackTrace();
+				// }
+			});
 
-        signup.setOnAction((event) -> {
-            try {
+		signup.setOnAction((event) -> {
+			try {
 
-                Stage loginStage = (Stage) loginButton.getScene().getWindow();
-                Stage signupStage = new Stage();
-                signupStage.setTitle("SignUp for MASS CHAT");
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("Signup.fxml"));
-                AnchorPane signupPage = (AnchorPane) loader.load();
-                Scene scene = new Scene(signupPage);
-                signupStage.setScene(scene);
-                loginStage.close();
-                signupStage.show();
+				Stage loginStage = (Stage) loginButton.getScene().getWindow();
+				Stage signupStage = new Stage();
+				signupStage.setTitle("SignUp for VARTA CHAT");
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(getClass().getResource("Signup.fxml"));
+				AnchorPane signupPage = (AnchorPane) loader.load();
+				Scene scene = new Scene(signupPage);
+				signupStage.setScene(scene);
+				loginStage.close();
+				signupStage.show();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
 
-    //Sh: If valid login credenentials, open the chat window
-    public void loginValid() {
+	// Sh: If valid login credenentials, open the chat window
+	public void loginValid() {
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Stage loginStage = (Stage) loginButton.getScene().getWindow();
-                    Stage chatStage = new Stage();
-                    chatStage.setTitle("Varta. Welcome " + client.getUsername() + ".");
-                    FXMLLoader loader = new FXMLLoader();
-                    loader.setLocation(getClass().getResource("ChatWindow.fxml"));
-                    AnchorPane chatpage = (AnchorPane) loader.load();
-                    Scene scene = new Scene(chatpage);
-                    chatStage.setScene(scene);
-                    loginStage.close();
-                    chatStage.show();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Stage loginStage = (Stage) loginButton.getScene()
+							.getWindow();
+					Stage chatStage = new Stage();
+					chatStage.setTitle("Varta. Welcome " + client.getUsername()
+							+ ".");
+					FXMLLoader loader = new FXMLLoader();
+					loader.setLocation(getClass()
+							.getResource("ChatWindow.fxml"));
+					AnchorPane chatpage = (AnchorPane) loader.load();
+					Scene scene = new Scene(chatpage);
+					chatStage.setScene(scene);
+					loginStage.close();
+					chatStage.show();
 
-                    EventHandler<WindowEvent> handler = new EventHandler<WindowEvent>() {
-                        public void handle(WindowEvent e) {
-                            Platform.exit();
-                            System.exit(0);
-                        }
-                    };
-                    chatStage.setOnCloseRequest(handler);
+					EventHandler<WindowEvent> handler = new EventHandler<WindowEvent>() {
+						public void handle(WindowEvent e) {
+							Platform.exit();
+							System.exit(0);
+						}
+					};
+					chatStage.setOnCloseRequest(handler);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
-    }
+	}
 
-    //Sh: If invalid login credentials, show error
-    public void loginInValid() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                invalid.setVisible(true);
-                System.out.println("Invalid login");
-            }
-        });
+	// Sh: If invalid login credentials, show error
+	public void loginInValid() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				invalid.setVisible(true);
+				System.out.println("Invalid login");
+			}
+		});
 
-    }
+	}
 
 }
