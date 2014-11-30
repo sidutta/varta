@@ -19,6 +19,10 @@ Our project has two packages:
 a) multimedia and its subpackages deals with A/V related stuff
 b) varta and its subpackages deals with all the remaining chat functionalities
 
+Usage: 
+java -jar server.jar server_ipaddr
+java -jar chat.jar server's_ipaddr(one put above) client_ipaddr(machine where client is running-could be same as that of server)
+
 Team Members:
 Siddhartha Dutta(120040005)
 Shivam Garg(12D020036)
